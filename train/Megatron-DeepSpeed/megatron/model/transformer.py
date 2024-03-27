@@ -370,7 +370,7 @@ class FlashSelfAttention(torch.nn.Module):
                            (default: 0.0)
     """
     def __init__(self, causal=False, softmax_scale=None, attention_dropout=0.0,
-                 window_size=(-1, 1), paged_kv_block_size=None,
+                 window_size=(-1, 1), paged_kv_block_size=0,
                  device=None, dtype=None):
         super().__init__()
         assert flash_attn_unpadded_func is not None or flash_attn_varlen_func is not None or flash_attn_builder is not None, \
@@ -427,7 +427,7 @@ class FlashSelfAttention(torch.nn.Module):
                                         device=q.device) if get_accelerator().device_name() == 'cuda' else None
             dropout_p = 0
 
-        if self.paged_kv_block_size:
+        if self.paged_kv_block_size != 0:
             num_blocks = math.ceil(seqlen_k / self.paged_kv_block_size) * batch_size
             block_table = rearrange(
                 torch.randperm(num_blocks, dtype=torch.int32, device=get_accelerator().device_name()),
@@ -518,7 +518,7 @@ class ParallelAttention(MegatronModule):
         self.num_key_value_heads = config.num_key_value_heads
         self.use_gqa = (self.num_attention_heads != self.num_key_value_heads)
         # Sliding Window Attention
-        self.window_size = (config.window_size, config.window_size)
+        self.window_size = (config.window_size[0], config.window_size[1])
 
         self.use_flash_attn = (args.use_flash_attn_v1 or args.use_flash_attn_triton or args.use_flash_attn_v2) \
                               and attention_type == AttnType.self_attn \
