@@ -402,7 +402,14 @@ if [[ $iteration -gt 0 ]]; then
     ds_ssh "echo $iteration_2 > $iteration_file_2"
 fi
 
-deepspeed ${megatron_deepspeed_dir}/pretrain_gpt.py \
+ 
+# deepspeed ${megatron_deepspeed_dir}/pretrain_gpt.py \
+#     ${megatron_options} \
+#     ${data_options} \
+#     ${deepspeed_options} \
+#     2>&1 | tee ${log_path}/${jobname}_${host}_${current_time}.log
+
+deepspeed ${megatron_deepspeed_dir}/pretrain_mistral.py \
     ${megatron_options} \
     ${data_options} \
     ${deepspeed_options} \
