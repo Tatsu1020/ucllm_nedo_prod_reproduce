@@ -322,6 +322,7 @@ megatron_options=" \
     --window-size ${window_size} \
     --paged-kv-block-size ${paged_kv_block_size} \
     --max-position-embeddings ${seq_len} \
+    --use-flash-attn-v2 \
     --train-tokens ${train_tokens} \
     --train-samples ${train_samples} \
     --lr ${lr} \
