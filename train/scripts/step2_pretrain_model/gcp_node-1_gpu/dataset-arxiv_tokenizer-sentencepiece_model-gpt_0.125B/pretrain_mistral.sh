@@ -319,7 +319,7 @@ megatron_options=" \
     --num-attention-heads ${num_attn_heads} \
     --num-key-value-heads ${num_key_value_heads} \
     --seq-length ${seq_len} \
-    --window-size ${window_size[@]} \
+    --window-size ${window_size} \
     --paged-kv-block-size ${paged_kv_block_size} \
     --max-position-embeddings ${seq_len} \
     --train-tokens ${train_tokens} \
