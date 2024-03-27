@@ -46,7 +46,7 @@ OUTPUT_ARGS="
     --eval-iters 10
 "
 
-torchrun pretrain_gpt.py \
+torchrun pretrain_mistral.py \
     $GPT_ARGS \
     $DATA_ARGS \
     $OUTPUT_ARGS \
