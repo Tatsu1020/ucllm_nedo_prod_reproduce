@@ -441,9 +441,10 @@ class FlashSelfAttention(torch.nn.Module):
             output = self.flash_attn_func(
                 q, k, v, cu_seqlens_q, cu_seqlens_k, seqlen_q, seqlen_k,
                 dropout_p,
-                softmax_scale=self.softmax_scale, causal=is_causal, window_size=self.window_size) #block_table=block_table
-            if get_accelerator().device_name() == 'cuda' else flash_attn_builder.flash_attn_func(
-                q, k, v, self.dropout_p, self.softmax_scale, is_causal, window_size=self.window_size) #block_table=block_table)
+                softmax_scale=self.softmax_scale, causal=is_causal, window_size=self.window_size #, block_table=block_table
+            ) if get_accelerator().device_name() == 'cuda' else flash_attn_builder.flash_attn_func(
+                q, k, v, self.dropout_p, self.softmax_scale, is_causal, window_size=self.window_size #, block_table=block_table
+            )
         else:
             output = self.flash_attn_func(
                 q, k, v, cu_seqlens_q, cu_seqlens_k, seqlen_q, seqlen_k,
