@@ -518,7 +518,8 @@ class ParallelAttention(MegatronModule):
         self.num_key_value_heads = config.num_key_value_heads
         self.use_gqa = (self.num_attention_heads != self.num_key_value_heads)
         # Sliding Window Attention
-        self.window_size = (config.window_size[0], config.window_size[1])
+        self.window_size = (config.window_size, config.window_size)
+        print(self.windo_size)
 
         self.use_flash_attn = (args.use_flash_attn_v1 or args.use_flash_attn_triton or args.use_flash_attn_v2) \
                               and attention_type == AttnType.self_attn \
