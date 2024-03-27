@@ -437,7 +437,7 @@ class FlashSelfAttention(torch.nn.Module):
         else:
             block_table = None
 
-        if self.flac_attn_func == flash_attn_varlen_func:
+        if self.flash_attn_func == flash_attn_varlen_func:
             output = self.flash_attn_func(
                 q, k, v, cu_seqlens_q, cu_seqlens_k, seqlen_q, seqlen_k,
                 dropout_p,
