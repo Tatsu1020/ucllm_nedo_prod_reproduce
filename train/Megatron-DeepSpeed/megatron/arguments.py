@@ -618,7 +618,7 @@ def _add_network_size_args(parser):
                        'attention. This is set to '
                        '   args.hidden_size // args.num_attention_heads '
                        'if not provided.')
-    group.add_argument('--window-size', type=int, default=[-1, -1],
+    group.add_argument('--window-size', type=int, default=(-1, -1),
                        help='Window size for local attention.')
     group.add_argument('--paged-kv-block-size', type=int, default=0,
                        help='Block size for paged QK cache.')

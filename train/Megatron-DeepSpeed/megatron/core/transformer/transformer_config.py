@@ -107,6 +107,8 @@ class TransformerConfig(ModelParallelConfig):
     hidden_size: int = 0
     num_attention_heads: int = 0
     num_key_value_heads: int = None
+    window_size: tuple = (-1, -1) # no local attention as default
+    paged_kv_block_size: int = 0 # no paged qk cache as default
 
     ffn_hidden_size: int = None
     kv_channels: int = None
