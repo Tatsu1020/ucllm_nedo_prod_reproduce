@@ -67,7 +67,7 @@ num_layers=12
 hidden_size=768
 num_attn_heads=12
 num_key_value_heads=4
-window_size=1024 1024
+window_size=(1024 1024) # if (-1 -1), local attention won't be applied
 paged_kv_block_size=0 # if 0, paged atten won't be used
 global_batch_size=256
 lr=6.0e-4
@@ -319,7 +319,7 @@ megatron_options=" \
     --num-attention-heads ${num_attn_heads} \
     --num-key-value-heads ${num_key_value_heads} \
     --seq-length ${seq_len} \
-    --window-size ${window_size} \
+    --window-size ${window_size[@]} \
     --paged-kv-block-size ${paged_kv_block_size} \
     --max-position-embeddings ${seq_len} \
     --train-tokens ${train_tokens} \
