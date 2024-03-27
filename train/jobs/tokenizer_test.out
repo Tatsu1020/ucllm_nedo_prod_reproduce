@@ -1,0 +1,5 @@
+/bin/bash: /home/ext_tatsunari1020_gmail_com/miniconda3/envs/.venv/lib/libtinfo.so.6: no version information available (required by /bin/bash)
+Traceback (most recent call last):
+  File "/home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/jobs/../scripts/step1_train_tokenizer/train_sentencepiece_tokenizer.py", line 8, in <module>
+    from special_token_list import BOS_TOKEN, EOS_TOKEN, PAD_TOKEN, CLS_TOKEN, SEP_TOKEN, EOD_TOKEN, MASK_TOKEN, NEWLINE_TOKEN
+ModuleNotFoundError: No module named 'special_token_list'

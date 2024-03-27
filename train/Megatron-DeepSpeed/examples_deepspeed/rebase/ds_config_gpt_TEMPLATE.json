@@ -19,5 +19,9 @@
     "initial_scale_power": 11
   },
 
-  "wall_clock_breakdown" : false
+  "wall_clock_breakdown" : false,
+  "wandb": {
+      "enabled": true,
+      "project": "geniac"
+    }
 }
