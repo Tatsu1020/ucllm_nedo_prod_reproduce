@@ -15,7 +15,7 @@ GPT_ARGS="
     --num-attention-heads 16 \
     --num-key-value-heads 4 \
     --seq-length 1024 \
-    --window-size [1024, 1024] \
+    --window-size 1024 1024 \
     --paged-kv-block-size 256 \
     --max-position-embeddings 1024 \
     --micro-batch-size 4 \
