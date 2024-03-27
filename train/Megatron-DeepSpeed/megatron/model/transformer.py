@@ -517,6 +517,8 @@ class ParallelAttention(MegatronModule):
         self.num_attention_heads = config.num_attention_heads
         self.num_key_value_heads = config.num_key_value_heads
         self.use_gqa = (self.num_attention_heads != self.num_key_value_heads)
+        # Sliding Window Attention
+        self.window_size = (config.window_size, config.window_size)
 
         self.use_flash_attn = (args.use_flash_attn_v1 or args.use_flash_attn_triton or args.use_flash_attn_v2) \
                               and attention_type == AttnType.self_attn \
@@ -621,9 +623,6 @@ class ParallelAttention(MegatronModule):
             bias=args.add_bias_linear,
             input_is_parallel=True,
             skip_bias_add=True)
-
-        # Sliding Window Attention
-        self.window_size = (config.window_size, config.window_size)
 
     def _checkpointed_attention_forward(self, query_layer, key_layer,
                                         value_layer, attention_mask,
