@@ -2,7 +2,7 @@
 
 # Command line options go here
 #SBATCH --partition=g2
-#SBATCH --time=14:00:00
+#SBATCH --time=16:00:00
 #SBATCH --nodes=1
 #SBATCH --job-name=pretrain_mistral
 #SBATCH --output=pretrain_mistral.out
