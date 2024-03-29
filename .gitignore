@@ -14,6 +14,6 @@ train/triton/
 train/hostfile
 train/hostfile*
 train/output/
-train/wandb/
+train/scripts/step2_pretrain_model/wandb/*
 
 Miniconda*

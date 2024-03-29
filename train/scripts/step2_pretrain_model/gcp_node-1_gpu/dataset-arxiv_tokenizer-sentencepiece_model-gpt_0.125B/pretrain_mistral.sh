@@ -47,7 +47,7 @@ echo ""
 ###############################################################################
 ### Main configs
 ## Mistral model use 8129 sequence length/context window
-seq_len=8192
+seq_len=4096
 
 ## The "GPT-3 XXX" below are configs from GPT-3 paper
 ## https://arxiv.org/abs/2005.14165, choose based on
@@ -67,7 +67,7 @@ num_layers=12
 hidden_size=768
 num_attn_heads=12
 num_key_value_heads=4
-window_size=4096 # if -1, local attention won't be applied
+window_size=1024 # if -1, local attention won't be applied
 paged_kv_block_size=0 # if 0, paged atten won't be used
 global_batch_size=256
 lr=6.0e-4
