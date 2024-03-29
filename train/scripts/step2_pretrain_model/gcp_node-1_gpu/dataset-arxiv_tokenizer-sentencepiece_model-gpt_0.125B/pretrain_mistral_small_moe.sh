@@ -70,7 +70,6 @@ num_key_value_heads=4
 window_size=1024 # if -1, local attention won't be applied
 paged_kv_block_size=0 # if 0, paged atten won't be used
 num_experts_switch=8
-swiglu=True
 global_batch_size=256
 lr=6.0e-4
 min_lr=1.0e-6
@@ -305,6 +304,7 @@ data_options=" \
 
 ## If CL is used, make sure to set "--split" the same as what you used during
 ## offline data analysis&indexing.
+## swiglu is true
 megatron_options=" \
     --override-opt_param-scheduler \
     --adam-beta1 0.9 \
@@ -324,7 +324,7 @@ megatron_options=" \
     --window-size ${window_size} \
     --paged-kv-block-size ${paged_kv_block_size} \
     --num-experts-switch ${num_experts_switch} \
-    --swiglu ${swiglu} \
+    --swiglu \
     --max-position-embeddings ${seq_len} \
     --train-tokens ${train_tokens} \
     --train-samples ${train_samples} \

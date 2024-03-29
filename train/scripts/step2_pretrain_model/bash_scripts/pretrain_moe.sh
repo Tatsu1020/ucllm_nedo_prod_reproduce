@@ -5,7 +5,7 @@
 #SBATCH --time=16:00:00
 #SBATCH --nodes=1
 #SBATCH --job-name=pretrain_mistral_moe
-#SBATCH --output=pretrain_mistral.out
+#SBATCH --output=pretrain_mistral_moe.out
 #SBATCH --gpus-per-node=1
 
 # Command(s) goes here
