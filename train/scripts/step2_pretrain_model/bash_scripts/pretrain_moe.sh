@@ -4,7 +4,7 @@
 #SBATCH --partition=g2
 #SBATCH --time=16:00:00
 #SBATCH --nodes=1
-#SBATCH --job-name=pretrain_mistral
+#SBATCH --job-name=pretrain_mistral_moe
 #SBATCH --output=pretrain_mistral.out
 #SBATCH --gpus-per-node=1
 
