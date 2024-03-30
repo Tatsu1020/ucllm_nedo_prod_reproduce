@@ -1,0 +1,379 @@
+{
+    "os": "Linux-5.15.0-1052-gcp-x86_64-with-glibc2.31",
+    "python": "3.9.19",
+    "heartbeatAt": "2024-03-27T19:10:16.958376",
+    "startedAt": "2024-03-27T19:10:16.148771",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--local_rank=0",
+        "--override-opt_param-scheduler",
+        "--adam-beta1",
+        "0.9",
+        "--adam-beta2",
+        "0.95",
+        "--tensor-model-parallel-size",
+        "1",
+        "--init-method-std",
+        "0.02",
+        "--lr-decay-tokens",
+        "300000000000",
+        "--lr-warmup-tokens",
+        "3000000000",
+        "--micro-batch-size",
+        "16",
+        "--exit-duration-in-mins",
+        "30000000",
+        "--global-batch-size",
+        "256",
+        "--num-layers",
+        "12",
+        "--hidden-size",
+        "768",
+        "--num-attention-heads",
+        "12",
+        "--seq-length",
+        "2048",
+        "--max-position-embeddings",
+        "2048",
+        "--train-tokens",
+        "300000000000",
+        "--train-samples",
+        "292968750",
+        "--lr",
+        "6.0e-4",
+        "--min-lr",
+        "1.0e-6",
+        "--lr-decay-style",
+        "cosine",
+        "--split",
+        "949,50,1",
+        "--log-interval",
+        "10",
+        "--eval-interval",
+        "100",
+        "--eval-iters",
+        "10",
+        "--save-interval",
+        "700",
+        "--weight-decay",
+        "0.1",
+        "--clip-grad",
+        "1.0",
+        "--hysteresis",
+        "2",
+        "--num-workers",
+        "0",
+        "--fp16",
+        "--seed",
+        "1234",
+        "--load",
+        "/home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/output/step2_pretrain_model/checkpoint/gpt_0.125B_tok300B_lr6.0e-4_min1.0e-6_w3000M_d300B_cosine_gbs256_mbs16_g_pp1_seed1234_rebase",
+        "--save",
+        "/home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/output/step2_pretrain_model/checkpoint/gpt_0.125B_tok300B_lr6.0e-4_min1.0e-6_w3000M_d300B_cosine_gbs256_mbs16_g_pp1_seed1234_rebase",
+        "--no-async-tensor-model-parallel-allreduce",
+        "--use-flash-attn-v2",
+        "--tensorboard-queue-size",
+        "1",
+        "--log-timers-to-tensorboard",
+        "--log-batch-size-to-tensorboard",
+        "--log-validation-ppl-to-tensorboard",
+        "--tensorboard-dir",
+        "/home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/output/step2_pretrain_model/tensorboard/gpt_0.125B_tok300B_lr6.0e-4_min1.0e-6_w3000M_d300B_cosine_gbs256_mbs16_g_pp1_seed1234_rebase_mlpre-g2-ghpc-0_2024.03.27_19.09.41",
+        "--log-optimizer-states-to-tensorboard",
+        "--tokenizer-type",
+        "SentencePieceTokenizer",
+        "--tokenizer-model",
+        "/home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/output/step1_train_tokenizer/botchan/botchan.model",
+        "--data-path",
+        "/home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/arxiv_text_document",
+        "--data-impl",
+        "mmap",
+        "--deepspeed",
+        "--deepspeed_config",
+        "/home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/output/step2_pretrain_model/deepspeed_config/ds_config_gbs256_mbs16_log10_zero0.json",
+        "--zero-stage",
+        "0",
+        "--pipeline-model-parallel-size",
+        "1"
+    ],
+    "state": "running",
+    "program": "/home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/pretrain_gpt.py",
+    "codePathLocal": null,
+    "codePath": "train/Megatron-DeepSpeed/pretrain_gpt.py",
+    "git": {
+        "remote": "git@github.com:Tatsu1020/ucllm_nedo_prod.git",
+        "commit": "2e3d87662b62c4a81d427a382aeef6da260260b4"
+    },
+    "email": "tatsunari1020@gmail.com",
+    "root": "/home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce",
+    "host": "mlpre-g2-ghpc-0",
+    "username": "ext_tatsunari1020_gmail_com",
+    "executable": "/home/ext_tatsunari1020_gmail_com/miniconda3/envs/.venv/bin/python",
+    "cpu_count": 48,
+    "cpu_count_logical": 48,
+    "cpu_freq": {
+        "current": 2200.229999999999,
+        "min": 0.0,
+        "max": 0.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.23,
+            "min": 0.0,
+            "max": 0.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 193.6498260498047,
+            "used": 16.38690185546875
+        }
+    },
+    "gpu": "NVIDIA L4",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA L4",
+            "memory_total": 24152899584
+        }
+    ],
+    "memory": {
+        "total": 377.87186431884766
+    }
+}

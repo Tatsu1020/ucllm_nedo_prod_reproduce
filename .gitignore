@@ -1,0 +1,19 @@
+# python related
+__pycache__/
+.venv/
+.venv*/
+
+# git repository
+train/apex/
+train/flash-attention/
+train/llm-jp-sft/
+#Megatron-DeepSpeed/
+train/triton/
+
+# artifact
+train/hostfile
+train/hostfile*
+train/output/
+train/scripts/step2_pretrain_model/wandb/*
+
+Miniconda*

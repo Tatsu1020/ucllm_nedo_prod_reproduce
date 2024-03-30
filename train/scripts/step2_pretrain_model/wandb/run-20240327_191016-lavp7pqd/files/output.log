@@ -1,0 +1,329 @@
+[2024-03-27 19:10:22,334] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Flops Profiler Enabled: False
+[2024-03-27 19:10:22,336] [INFO] [logging.py:96:log_dist] [Rank 0] Using client Optimizer as basic optimizer
+[2024-03-27 19:10:22,337] [INFO] [logging.py:96:log_dist] [Rank 0] Removing param_group that has no 'params' in the basic Optimizer
+[2024-03-27 19:10:22,341] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Basic Optimizer = FusedAdam
+[2024-03-27 19:10:22,341] [INFO] [logging.py:96:log_dist] [Rank 0] Creating fp16 optimizer with dynamic loss scale
+[2024-03-27 19:10:22,468] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Final Optimizer = FusedAdam
+[2024-03-27 19:10:22,469] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed using client LR scheduler
+[2024-03-27 19:10:22,469] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed LR Scheduler = <megatron.optimizer_param_scheduler.OptimizerParamScheduler object at 0x7f8acfa0a520>
+[2024-03-27 19:10:22,469] [INFO] [logging.py:96:log_dist] [Rank 0] step=0, skipped=0, lr=[0.0, 0.0], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2024-03-27 19:10:22,469] [INFO] [config.py:979:print] DeepSpeedEngine configuration:
+[2024-03-27 19:10:22,470] [INFO] [config.py:983:print]   activation_checkpointing_config  {
+    "partition_activations": false,
+    "contiguous_memory_optimization": false,
+    "cpu_checkpointing": false,
+    "number_checkpoints": null,
+    "synchronize_checkpoint_boundary": false,
+    "profile": false
+}
+[2024-03-27 19:10:22,470] [INFO] [config.py:983:print]   aio_config ................... {'block_size': 1048576, 'queue_depth': 8, 'thread_count': 1, 'single_submit': False, 'overlap_events': True}
+[2024-03-27 19:10:22,470] [INFO] [config.py:983:print]   amp_enabled .................. False
+[2024-03-27 19:10:22,470] [INFO] [config.py:983:print]   amp_params ................... False
+[2024-03-27 19:10:22,471] [INFO] [config.py:983:print]   autotuning_config ............ {
+    "enabled": false,
+    "start_step": null,
+    "end_step": null,
+    "metric_path": null,
+    "arg_mappings": null,
+    "metric": "throughput",
+    "model_info": null,
+    "results_dir": "autotuning_results",
+    "exps_dir": "autotuning_exps",
+    "overwrite": true,
+    "fast": true,
+    "start_profile_step": 3,
+    "end_profile_step": 5,
+    "tuner_type": "gridsearch",
+    "tuner_early_stopping": 5,
+    "tuner_num_trials": 50,
+    "model_info_path": null,
+    "mp_size": 1,
+    "max_train_batch_size": null,
+    "min_train_batch_size": 1,
+    "max_train_micro_batch_size_per_gpu": 1.024000e+03,
+    "min_train_micro_batch_size_per_gpu": 1,
+    "num_tuning_micro_batch_sizes": 3
+}
+[2024-03-27 19:10:22,471] [INFO] [config.py:983:print]   bfloat16_enabled ............. False
+[2024-03-27 19:10:22,471] [INFO] [config.py:983:print]   checkpoint_parallel_write_pipeline  False
+[2024-03-27 19:10:22,471] [INFO] [config.py:983:print]   checkpoint_tag_validation_enabled  True
+[2024-03-27 19:10:22,471] [INFO] [config.py:983:print]   checkpoint_tag_validation_fail  False
+[2024-03-27 19:10:22,471] [INFO] [config.py:983:print]   comms_config ................. <deepspeed.comm.config.DeepSpeedCommsConfig object at 0x7f8acc1007f0>
+[2024-03-27 19:10:22,471] [INFO] [config.py:983:print]   communication_data_type ...... None
+[2024-03-27 19:10:22,471] [INFO] [config.py:983:print]   compression_config ........... {'weight_quantization': {'shared_parameters': {'enabled': False, 'quantizer_kernel': False, 'schedule_offset': 0, 'quantize_groups': 1, 'quantize_verbose': False, 'quantization_type': 'symmetric', 'quantize_weight_in_forward': False, 'rounding': 'nearest', 'fp16_mixed_quantize': False, 'quantize_change_ratio': 0.001}, 'different_groups': {}}, 'activation_quantization': {'shared_parameters': {'enabled': False, 'quantization_type': 'symmetric', 'range_calibration': 'dynamic', 'schedule_offset': 1000}, 'different_groups': {}}, 'sparse_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'row_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'head_pruning': {'shared_parameters': {'enabled': False, 'method': 'topk', 'schedule_offset': 1000}, 'different_groups': {}}, 'channel_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'layer_reduction': {'enabled': False}}
+[2024-03-27 19:10:22,471] [INFO] [config.py:983:print]   curriculum_enabled_legacy .... False
+[2024-03-27 19:10:22,471] [INFO] [config.py:983:print]   curriculum_params_legacy ..... False
+[2024-03-27 19:10:22,471] [INFO] [config.py:983:print]   data_efficiency_config ....... {'enabled': False, 'seed': 1234, 'data_sampling': {'enabled': False, 'num_epochs': 1000, 'num_workers': 0, 'curriculum_learning': {'enabled': False}}, 'data_routing': {'enabled': False, 'random_ltd': {'enabled': False, 'layer_token_lr_schedule': {'enabled': False}}}}
+[2024-03-27 19:10:22,471] [INFO] [config.py:983:print]   data_efficiency_enabled ...... False
+[2024-03-27 19:10:22,472] [INFO] [config.py:983:print]   dataloader_drop_last ......... False
+[2024-03-27 19:10:22,472] [INFO] [config.py:983:print]   disable_allgather ............ False
+[2024-03-27 19:10:22,472] [INFO] [config.py:983:print]   dump_state ................... False
+[2024-03-27 19:10:22,472] [INFO] [config.py:983:print]   dynamic_loss_scale_args ...... {'init_scale': 2048, 'scale_window': 500, 'delayed_shift': 2, 'consecutive_hysteresis': False, 'min_scale': 1}
+[2024-03-27 19:10:22,472] [INFO] [config.py:983:print]   eigenvalue_enabled ........... False
+[2024-03-27 19:10:22,472] [INFO] [config.py:983:print]   eigenvalue_gas_boundary_resolution  1
+[2024-03-27 19:10:22,472] [INFO] [config.py:983:print]   eigenvalue_layer_name ........ bert.encoder.layer
+[2024-03-27 19:10:22,472] [INFO] [config.py:983:print]   eigenvalue_layer_num ......... 0
+[2024-03-27 19:10:22,472] [INFO] [config.py:983:print]   eigenvalue_max_iter .......... 100
+[2024-03-27 19:10:22,472] [INFO] [config.py:983:print]   eigenvalue_stability ......... 1e-06
+[2024-03-27 19:10:22,472] [INFO] [config.py:983:print]   eigenvalue_tol ............... 0.01
+[2024-03-27 19:10:22,472] [INFO] [config.py:983:print]   eigenvalue_verbose ........... False
+[2024-03-27 19:10:22,472] [INFO] [config.py:983:print]   elasticity_enabled ........... False
+[2024-03-27 19:10:22,473] [INFO] [config.py:983:print]   flops_profiler_config ........ {
+    "enabled": false,
+    "recompute_fwd_factor": 0.0,
+    "profile_step": 1,
+    "module_depth": -1,
+    "top_modules": 1,
+    "detailed": true,
+    "output_file": null
+}
+[2024-03-27 19:10:22,473] [INFO] [config.py:983:print]   fp16_auto_cast ............... False
+[2024-03-27 19:10:22,476] [INFO] [config.py:983:print]   fp16_enabled ................. True
+[2024-03-27 19:10:22,477] [INFO] [config.py:983:print]   fp16_master_weights_and_gradients  False
+[2024-03-27 19:10:22,477] [INFO] [config.py:983:print]   global_rank .................. 0
+[2024-03-27 19:10:22,477] [INFO] [config.py:983:print]   grad_accum_dtype ............. None
+[2024-03-27 19:10:22,478] [INFO] [config.py:983:print]   gradient_accumulation_steps .. 16
+[2024-03-27 19:10:22,478] [INFO] [config.py:983:print]   gradient_clipping ............ 1.0
+[2024-03-27 19:10:22,479] [INFO] [config.py:983:print]   gradient_predivide_factor .... 1.0
+[2024-03-27 19:10:22,479] [INFO] [config.py:983:print]   hybrid_engine ................ enabled=False max_out_tokens=512 inference_tp_size=1 release_inference_cache=False pin_parameters=True tp_gather_partition_size=8
+[2024-03-27 19:10:22,479] [INFO] [config.py:983:print]   initial_dynamic_scale ........ 2048
+[2024-03-27 19:10:22,480] [INFO] [config.py:983:print]   load_universal_checkpoint .... False
+[2024-03-27 19:10:22,480] [INFO] [config.py:983:print]   loss_scale ................... 0
+[2024-03-27 19:10:22,481] [INFO] [config.py:983:print]   memory_breakdown ............. False
+[2024-03-27 19:10:22,481] [INFO] [config.py:983:print]   mics_hierarchial_params_gather  False
+[2024-03-27 19:10:22,482] [INFO] [config.py:983:print]   mics_shard_size .............. -1
+[2024-03-27 19:10:22,482] [INFO] [config.py:983:print]   monitor_config ............... tensorboard=TensorBoardConfig(enabled=False, output_path='', job_name='DeepSpeedJobName') wandb=WandbConfig(enabled=True, group=None, team=None, project='geniac') csv_monitor=CSVConfig(enabled=False, output_path='', job_name='DeepSpeedJobName') enabled=True
+[2024-03-27 19:10:22,483] [INFO] [config.py:983:print]   nebula_config ................ {
+    "enabled": false,
+    "persistent_storage_path": null,
+    "persistent_time_interval": 100,
+    "num_of_version_in_retention": 2,
+    "enable_nebula_load": true,
+    "load_path": null
+}
+[2024-03-27 19:10:22,483] [INFO] [config.py:983:print]   optimizer_legacy_fusion ...... False
+[2024-03-27 19:10:22,483] [INFO] [config.py:983:print]   optimizer_name ............... None
+[2024-03-27 19:10:22,484] [INFO] [config.py:983:print]   optimizer_params ............. None
+[2024-03-27 19:10:22,484] [INFO] [config.py:983:print]   pipeline ..................... {'stages': 'auto', 'partition': 'best', 'seed_layers': False, 'activation_checkpoint_interval': 0, 'pipe_partitioned': True, 'grad_partitioned': True}
+[2024-03-27 19:10:22,485] [INFO] [config.py:983:print]   pld_enabled .................. False
+[2024-03-27 19:10:22,485] [INFO] [config.py:983:print]   pld_params ................... False
+[2024-03-27 19:10:22,485] [INFO] [config.py:983:print]   prescale_gradients ........... True
+[2024-03-27 19:10:22,486] [INFO] [config.py:983:print]   scheduler_name ............... None
+[2024-03-27 19:10:22,486] [INFO] [config.py:983:print]   scheduler_params ............. None
+[2024-03-27 19:10:22,487] [INFO] [config.py:983:print]   seq_parallel_communication_data_type  torch.float32
+[2024-03-27 19:10:22,487] [INFO] [config.py:983:print]   sparse_attention ............. None
+[2024-03-27 19:10:22,488] [INFO] [config.py:983:print]   sparse_gradients_enabled ..... False
+[2024-03-27 19:10:22,488] [INFO] [config.py:983:print]   steps_per_print .............. 10
+[2024-03-27 19:10:22,488] [INFO] [config.py:983:print]   train_batch_size ............. 256
+[2024-03-27 19:10:22,489] [INFO] [config.py:983:print]   train_micro_batch_size_per_gpu  16
+[2024-03-27 19:10:22,489] [INFO] [config.py:983:print]   use_data_before_expert_parallel_  False
+[2024-03-27 19:10:22,490] [INFO] [config.py:983:print]   use_node_local_storage ....... False
+[2024-03-27 19:10:22,490] [INFO] [config.py:983:print]   wall_clock_breakdown ......... False
+[2024-03-27 19:10:22,490] [INFO] [config.py:983:print]   weight_quantization_config ... None
+[2024-03-27 19:10:22,492] [INFO] [config.py:983:print]   world_size ................... 1
+[2024-03-27 19:10:22,492] [INFO] [config.py:983:print]   zero_allow_untested_optimizer  False
+[2024-03-27 19:10:22,493] [INFO] [config.py:983:print]   zero_config .................. stage=0 contiguous_gradients=True reduce_scatter=True reduce_bucket_size=500,000,000 use_multi_rank_bucket_allreduce=True allgather_partitions=True allgather_bucket_size=500,000,000 overlap_comm=False load_from_fp32_weights=True elastic_checkpoint=False offload_param=None offload_optimizer=None sub_group_size=1,000,000,000 cpu_offload_param=None cpu_offload_use_pin_memory=None cpu_offload=None prefetch_bucket_size=50,000,000 param_persistence_threshold=100,000 model_persistence_threshold=sys.maxsize max_live_parameters=1,000,000,000 max_reuse_distance=1,000,000,000 gather_16bit_weights_on_model_save=False stage3_gather_fp16_weights_on_model_save=False ignore_unused_parameters=True legacy_stage1=False round_robin_gradients=False zero_hpz_partition_size=1 zero_quantized_weights=False zero_quantized_nontrainable_weights=False zero_quantized_gradients=False mics_shard_size=-1 mics_hierarchical_params_gather=False memory_efficient_linear=True pipeline_loading_checkpoint=False override_module_apply=True
+[2024-03-27 19:10:22,493] [INFO] [config.py:983:print]   zero_enabled ................. False
+[2024-03-27 19:10:22,494] [INFO] [config.py:983:print]   zero_force_ds_cpu_optimizer .. True
+[2024-03-27 19:10:22,505] [INFO] [config.py:983:print]   zero_optimization_stage ...... 0
+[2024-03-27 19:10:22,506] [INFO] [config.py:969:print_user_config]   json = {
+    "train_batch_size": 256,
+    "train_micro_batch_size_per_gpu": 16,
+    "steps_per_print": 10,
+    "zero_optimization": {
+        "stage": 0
+    },
+    "gradient_clipping": 1.0,
+    "prescale_gradients": true,
+    "fp16": {
+        "enabled": true,
+        "loss_scale": 0,
+        "loss_scale_window": 500,
+        "hysteresis": 2,
+        "min_loss_scale": 1,
+        "initial_scale_power": 11
+    },
+    "wall_clock_breakdown": false,
+    "wandb": {
+        "enabled": true,
+        "project": "geniac"
+    }
+}
+[2024-03-27 19:10:22,506] [INFO] [engine.py:99:__init__] CONFIG: micro_batches=16 micro_batch_size=16
+[2024-03-27 19:10:22,507] [INFO] [engine.py:139:__init__] is_pipe_partitioned= False is_grad_partitioned= False
+[2024-03-27 19:10:22,601] [INFO] [engine.py:158:__init__] RANK=0 STAGE=0 LAYERS=17 [0, 17) STAGE_PARAMS=88201728 (88.202M) TOTAL_PARAMS=88201728 (88.202M) UNIQUE_PARAMS=88201728 (88.202M)
+[2024-03-27 19:10:22,603] [WARNING] [engine.py:2703:load_checkpoint] Unable to find latest file at /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/output/step2_pretrain_model/checkpoint/gpt_0.125B_tok300B_lr6.0e-4_min1.0e-6_w3000M_d300B_cosine_gbs256_mbs16_g_pp1_seed1234_rebase/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+WARNING: could not find the metadata file /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/output/step2_pretrain_model/checkpoint/gpt_0.125B_tok300B_lr6.0e-4_min1.0e-6_w3000M_d300B_cosine_gbs256_mbs16_g_pp1_seed1234_rebase
+    will not load any checkpoints and will start from random
+(min, max) time across ranks (ms):
+    load-checkpoint ................................: (2.02, 2.02)
+[after model, optimizer, and learning rate scheduler are built] datetime: 2024-03-27 19:10:22
+> building train, validation, and test datasets ...
+ > datasets target sizes (minimum size):
+    train:      292968750
+    validation: 29299200
+    test:       2560
+> building train, validation, and test datasets for GPT ...
+Single data path provided for train, valid & test
+ > building dataset index ...
+    reading sizes...
+    reading pointers...
+    reading document index...
+    creating numpy buffer of mmap...
+    creating memory view of numpy buffer...
+ > finished creating indexed dataset in 0.010742 seconds
+    number of documents: 13953
+ > dataset split:
+    train:
+     document indices in [0, 13241) total of 13241 documents
+    validation:
+     document indices in [13241, 13939) total of 698 documents
+    test:
+     document indices in [13939, 13953) total of 14 documents
+ > WARNING: could not find index map files, building the indices on rank 0 ...
+ > last epoch number of samples (211170) is larger than 80% of number of samples per epoch (217825), setting separate_last_epoch to False
+ > elasped time to build and save doc-idx mapping (seconds): 1.361673
+ > elasped time to build and save sample-idx mapping (seconds): 29.110989
+ > building shuffle index with split [0, 292975406) and [292975406, 292975406) ...
+ > elasped time to build and save shuffle-idx mapping (seconds): 20.242434
+ > loading doc-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/1e6beea2fbcce9182299ab70d012dd0b_doc_idx.npy
+ > loading sample-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/1e6beea2fbcce9182299ab70d012dd0b_sample_idx.npy
+ > loading shuffle-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/1e6beea2fbcce9182299ab70d012dd0b_shuffle_idx.npy
+    loaded indexed file in 0.410 seconds
+    total number of samples: 292975407
+    total number of epochs: 1345
+ > WARNING: could not find index map files, building the indices on rank 0 ...
+ > last epoch number of samples (8195) is smaller than 80% of number of samples per epoch (12153), setting separate_last_epoch to True
+ > elasped time to build and save doc-idx mapping (seconds): 0.138299
+ > elasped time to build and save sample-idx mapping (seconds): 1.663857
+ > building shuffle index with split [0, 29291005) and [29291005, 29303159) ...
+ > elasped time to build and save shuffle-idx mapping (seconds): 1.733422
+ > loading doc-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/c7910580994501e52505bb2f374d9ffe_doc_idx.npy
+ > loading sample-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/c7910580994501e52505bb2f374d9ffe_sample_idx.npy
+ > loading shuffle-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/c7910580994501e52505bb2f374d9ffe_shuffle_idx.npy
+    loaded indexed file in 0.095 seconds
+    total number of samples: 29303160
+    total number of epochs: 2411
+ > WARNING: could not find index map files, building the indices on rank 0 ...
+ > last epoch number of samples (167) is larger than 80% of number of samples per epoch (199), setting separate_last_epoch to False
+ > elasped time to build and save doc-idx mapping (seconds): 0.006627
+ > elasped time to build and save sample-idx mapping (seconds): 0.008325
+ > building shuffle index with split [0, 2592) and [2592, 2592) ...
+ > elasped time to build and save shuffle-idx mapping (seconds): 0.007707
+ > loading doc-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/004a45e3a9b585b58cc83796f8c5d0b1_doc_idx.npy
+ > loading sample-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/004a45e3a9b585b58cc83796f8c5d0b1_sample_idx.npy
+ > loading shuffle-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/004a45e3a9b585b58cc83796f8c5d0b1_shuffle_idx.npy
+    loaded indexed file in 0.006 seconds
+    total number of samples: 2593
+    total number of epochs: 13
+> finished creating GPT datasets ...
+[after dataloaders are built] datetime: 2024-03-27 19:11:18
+done with setup ...
+(min, max) time across ranks (ms):
+    model-and-optimizer-setup ......................: (9269.10, 9269.10)
+    train/valid/test-data-iterators-setup ..........: (55240.39, 55240.39)
+training ...
+[before the start of training step] datetime: 2024-03-27 19:11:18
+/home/ext_tatsunari1020_gmail_com/miniconda3/envs/.venv/lib/python3.9/site-packages/torch/autograd/__init__.py:266: UserWarning: c10d::broadcast_: an autograd kernel was not registered to the Autograd key(s) but we are trying to backprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, please ensure you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, or to squash this warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /opt/conda/conda-bld/pytorch_1704987277512/work/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[2024-03-27 19:15:42,647] [INFO] [logging.py:96:log_dist] [Rank 0] step=10, skipped=0, lr=[9.437183999999999e-07, 9.437183999999999e-07], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 10 loss: 7.6365 iter time (s): 26.236 samples/sec: 9.757
+ iteration       10/ 1144409 | consumed samples:         2560 | consumed tokens:      5242880 | elapsed time per iteration (ms): 26393.6 | learning rate: 9.437E-07 | global batch size:   256 | lm loss: 7.767975E+00 | loss scale: 2048.0 | grad norm: 18.604 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.699 | tokens per gpu per second (tgs): 19864.183 | TFLOPs: 14.76 |
+[Rank 0] (after 10 iterations) memory (MB) | allocated: 1719.63232421875 | max allocated: 13688.12451171875 | reserved: 14256.0 | max reserved: 14256.0
+/home/ext_tatsunari1020_gmail_com/miniconda3/envs/.venv/lib/python3.9/site-packages/torch/autograd/__init__.py:266: UserWarning: c10d::broadcast_: an autograd kernel was not registered to the Autograd key(s) but we are trying to backprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, please ensure you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, or to squash this warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /opt/conda/conda-bld/pytorch_1704987277512/work/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[2024-03-27 19:20:04,186] [INFO] [logging.py:96:log_dist] [Rank 0] step=20, skipped=0, lr=[1.9922943999999996e-06, 1.9922943999999996e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 20 loss: 6.9169 iter time (s): 25.824 samples/sec: 9.913
+ iteration       20/ 1144409 | consumed samples:         5120 | consumed tokens:     10485760 | elapsed time per iteration (ms): 26154.3 | learning rate: 1.992E-06 | global batch size:   256 | lm loss: 7.248934E+00 | loss scale: 2048.0 | grad norm: 10.108 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.788 | tokens per gpu per second (tgs): 20045.926 | TFLOPs: 14.90 |
+[2024-03-27 19:24:22,501] [INFO] [logging.py:96:log_dist] [Rank 0] step=30, skipped=0, lr=[3.0408703999999997e-06, 3.0408703999999997e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 30 loss: 6.4118 iter time (s): 25.675 samples/sec: 9.971
+ iteration       30/ 1144409 | consumed samples:         7680 | consumed tokens:     15728640 | elapsed time per iteration (ms): 25830.9 | learning rate: 3.041E-06 | global batch size:   256 | lm loss: 6.627678E+00 | loss scale: 2048.0 | grad norm: 5.143 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.911 | tokens per gpu per second (tgs): 20296.902 | TFLOPs: 15.08 |
+[2024-03-27 19:28:39,877] [INFO] [logging.py:96:log_dist] [Rank 0] step=40, skipped=0, lr=[4.089446399999999e-06, 4.089446399999999e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 40 loss: 6.0800 iter time (s): 25.584 samples/sec: 10.006
+ iteration       40/ 1144409 | consumed samples:        10240 | consumed tokens:     20971520 | elapsed time per iteration (ms): 25738.0 | learning rate: 4.089E-06 | global batch size:   256 | lm loss: 6.225962E+00 | loss scale: 2048.0 | grad norm: 2.991 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.946 | tokens per gpu per second (tgs): 20370.176 | TFLOPs: 15.14 |
+[2024-03-27 19:32:56,767] [INFO] [logging.py:96:log_dist] [Rank 0] step=50, skipped=0, lr=[5.1380224e-06, 5.1380224e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 50 loss: 5.9502 iter time (s): 25.531 samples/sec: 10.027
+ iteration       50/ 1144409 | consumed samples:        12800 | consumed tokens:     26214400 | elapsed time per iteration (ms): 25689.2 | learning rate: 5.138E-06 | global batch size:   256 | lm loss: 6.020673E+00 | loss scale: 2048.0 | grad norm: 2.448 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.965 | tokens per gpu per second (tgs): 20408.872 | TFLOPs: 15.17 |
+[2024-03-27 19:37:13,490] [INFO] [logging.py:96:log_dist] [Rank 0] step=60, skipped=0, lr=[6.186598399999999e-06, 6.186598399999999e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 60 loss: 5.7689 iter time (s): 25.515 samples/sec: 10.033
+ iteration       60/ 1144409 | consumed samples:        15360 | consumed tokens:     31457280 | elapsed time per iteration (ms): 25672.9 | learning rate: 6.187E-06 | global batch size:   256 | lm loss: 5.823773E+00 | loss scale: 2048.0 | grad norm: 2.344 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.972 | tokens per gpu per second (tgs): 20421.839 | TFLOPs: 15.18 |
+[2024-03-27 19:41:30,024] [INFO] [logging.py:96:log_dist] [Rank 0] step=70, skipped=0, lr=[7.2351744e-06, 7.2351744e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 70 loss: 5.5497 iter time (s): 25.494 samples/sec: 10.042
+ iteration       70/ 1144409 | consumed samples:        17920 | consumed tokens:     36700160 | elapsed time per iteration (ms): 25652.5 | learning rate: 7.235E-06 | global batch size:   256 | lm loss: 5.621368E+00 | loss scale: 2048.0 | grad norm: 2.271 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.980 | tokens per gpu per second (tgs): 20438.086 | TFLOPs: 15.19 |
+[2024-03-27 19:45:46,486] [INFO] [logging.py:96:log_dist] [Rank 0] step=80, skipped=0, lr=[8.2837504e-06, 8.2837504e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 80 loss: 5.3310 iter time (s): 25.490 samples/sec: 10.043
+ iteration       80/ 1144409 | consumed samples:        20480 | consumed tokens:     41943040 | elapsed time per iteration (ms): 25646.0 | learning rate: 8.284E-06 | global batch size:   256 | lm loss: 5.413800E+00 | loss scale: 2048.0 | grad norm: 1.931 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.982 | tokens per gpu per second (tgs): 20443.251 | TFLOPs: 15.19 |
+[2024-03-27 19:50:03,053] [INFO] [logging.py:96:log_dist] [Rank 0] step=90, skipped=0, lr=[9.3323264e-06, 9.3323264e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 90 loss: 5.1951 iter time (s): 25.500 samples/sec: 10.039
+ iteration       90/ 1144409 | consumed samples:        23040 | consumed tokens:     47185920 | elapsed time per iteration (ms): 25657.3 | learning rate: 9.332E-06 | global batch size:   256 | lm loss: 5.239027E+00 | loss scale: 2048.0 | grad norm: 1.762 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.978 | tokens per gpu per second (tgs): 20434.288 | TFLOPs: 15.19 |
+[2024-03-27 19:54:19,516] [INFO] [logging.py:96:log_dist] [Rank 0] step=100, skipped=0, lr=[1.03809024e-05, 1.03809024e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 100 loss: 5.0014 iter time (s): 25.485 samples/sec: 10.045
+ iteration      100/ 1144409 | consumed samples:        25600 | consumed tokens:     52428800 | elapsed time per iteration (ms): 25646.5 | learning rate: 1.038E-05 | global batch size:   256 | lm loss: 5.101011E+00 | loss scale: 2048.0 | grad norm: 1.852 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.982 | tokens per gpu per second (tgs): 20442.850 | TFLOPs: 15.19 |
+wandb: WARNING Step only supports monotonically increasing values, use define_metric to set a custom x axis. For details see: https://wandb.me/define-metric
+wandb: WARNING (User provided step: 25600 is less than current step: 25601. Dropping entry: {'Train/Samples/eval_loss': 5.018487930297852, '_timestamp': 1711569267.2156823}).
+wandb: WARNING (User provided step: 25600 is less than current step: 25601. Dropping entry: {'Train/Samples/eval_loss': 5.0028791427612305, '_timestamp': 1711569274.484603}).
+wandb: WARNING (User provided step: 25600 is less than current step: 25601. Dropping entry: {'Train/Samples/eval_loss': 4.953438758850098, '_timestamp': 1711569281.7429392}).
+wandb: WARNING (User provided step: 25600 is less than current step: 25601. Dropping entry: {'Train/Samples/eval_loss': 4.956620216369629, '_timestamp': 1711569288.9737148}).
+wandb: WARNING (User provided step: 25600 is less than current step: 25601. Dropping entry: {'Train/Samples/eval_loss': 5.030146598815918, '_timestamp': 1711569296.2502458}).
+wandb: WARNING (User provided step: 25600 is less than current step: 25601. Dropping entry: {'Train/Samples/eval_loss': 5.0120720863342285, '_timestamp': 1711569303.5038748}).
+wandb: WARNING (User provided step: 25600 is less than current step: 25601. Dropping entry: {'Train/Samples/eval_loss': 4.938884735107422, '_timestamp': 1711569310.7534063}).
+wandb: WARNING (User provided step: 25600 is less than current step: 25601. Dropping entry: {'Train/Samples/eval_loss': 4.981512069702148, '_timestamp': 1711569318.0064096}).
+wandb: WARNING (User provided step: 25600 is less than current step: 25601. Dropping entry: {'Train/Samples/eval_loss': 4.9600372314453125, '_timestamp': 1711569325.2443368}).
+-----------------------------------------------------------------------------------------------
+ validation loss at iteration 100 | lm loss value: 4.983506E+00 | lm loss PPL: 1.459853E+02 |
+-----------------------------------------------------------------------------------------------
+wandb: WARNING (User provided step: 25600 is less than current step: 25601. Dropping entry: {'Train/Samples/eval_loss': 4.98094367980957, '_timestamp': 1711569332.4920218}).
+[2024-03-27 19:59:48,736] [INFO] [logging.py:96:log_dist] [Rank 0] step=110, skipped=0, lr=[1.14294784e-05, 1.14294784e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 110 loss: 4.8756 iter time (s): 25.485 samples/sec: 10.045
+ iteration      110/ 1144409 | consumed samples:        28160 | consumed tokens:     57671680 | elapsed time per iteration (ms): 32921.1 | learning rate: 1.143E-05 | global batch size:   256 | lm loss: 4.945452E+00 | loss scale: 2048.0 | grad norm: 1.880 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 7.776 | tokens per gpu per second (tgs): 15925.588 | TFLOPs: 11.84 |
+[2024-03-27 20:04:05,016] [INFO] [logging.py:96:log_dist] [Rank 0] step=120, skipped=0, lr=[1.2478054399999999e-05, 1.2478054399999999e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 120 loss: 4.7381 iter time (s): 25.470 samples/sec: 10.051
+ iteration      120/ 1144409 | consumed samples:        30720 | consumed tokens:     62914560 | elapsed time per iteration (ms): 25629.2 | learning rate: 1.248E-05 | global batch size:   256 | lm loss: 4.818941E+00 | loss scale: 2048.0 | grad norm: 1.650 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.989 | tokens per gpu per second (tgs): 20456.632 | TFLOPs: 15.20 |
+[2024-03-27 20:08:21,299] [INFO] [logging.py:96:log_dist] [Rank 0] step=130, skipped=0, lr=[1.3526630399999999e-05, 1.3526630399999999e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 130 loss: 4.6708 iter time (s): 25.469 samples/sec: 10.051
+ iteration      130/ 1144409 | consumed samples:        33280 | consumed tokens:     68157440 | elapsed time per iteration (ms): 25627.7 | learning rate: 1.353E-05 | global batch size:   256 | lm loss: 4.689230E+00 | loss scale: 2048.0 | grad norm: 1.410 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.989 | tokens per gpu per second (tgs): 20457.862 | TFLOPs: 15.20 |
+[2024-03-27 20:12:37,525] [INFO] [logging.py:96:log_dist] [Rank 0] step=140, skipped=0, lr=[1.4575206399999998e-05, 1.4575206399999998e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 140 loss: 4.5050 iter time (s): 25.466 samples/sec: 10.053
+ iteration      140/ 1144409 | consumed samples:        35840 | consumed tokens:     73400320 | elapsed time per iteration (ms): 25622.0 | learning rate: 1.458E-05 | global batch size:   256 | lm loss: 4.582571E+00 | loss scale: 2048.0 | grad norm: 1.361 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.991 | tokens per gpu per second (tgs): 20462.402 | TFLOPs: 15.21 |
+[2024-03-27 20:16:53,757] [INFO] [logging.py:96:log_dist] [Rank 0] step=150, skipped=0, lr=[1.5623782399999998e-05, 1.5623782399999998e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 150 loss: 4.4496 iter time (s): 25.466 samples/sec: 10.053
+ iteration      150/ 1144409 | consumed samples:        38400 | consumed tokens:     78643200 | elapsed time per iteration (ms): 25623.2 | learning rate: 1.562E-05 | global batch size:   256 | lm loss: 4.485163E+00 | loss scale: 2048.0 | grad norm: 1.313 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.991 | tokens per gpu per second (tgs): 20461.438 | TFLOPs: 15.21 |
+[2024-03-27 20:21:09,929] [INFO] [logging.py:96:log_dist] [Rank 0] step=160, skipped=0, lr=[1.6672358399999998e-05, 1.6672358399999998e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 160 loss: 4.3192 iter time (s): 25.457 samples/sec: 10.056
+ iteration      160/ 1144409 | consumed samples:        40960 | consumed tokens:     83886080 | elapsed time per iteration (ms): 25619.5 | learning rate: 1.667E-05 | global batch size:   256 | lm loss: 4.370287E+00 | loss scale: 2048.0 | grad norm: 1.257 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.992 | tokens per gpu per second (tgs): 20464.444 | TFLOPs: 15.21 |
+[2024-03-27 20:25:26,031] [INFO] [logging.py:96:log_dist] [Rank 0] step=170, skipped=0, lr=[1.7720934399999998e-05, 1.7720934399999998e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 170 loss: 4.2326 iter time (s): 25.450 samples/sec: 10.059
+ iteration      170/ 1144409 | consumed samples:        43520 | consumed tokens:     89128960 | elapsed time per iteration (ms): 25607.8 | learning rate: 1.772E-05 | global batch size:   256 | lm loss: 4.299707E+00 | loss scale: 2048.0 | grad norm: 1.595 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.997 | tokens per gpu per second (tgs): 20473.733 | TFLOPs: 15.22 |
+[2024-03-27 20:29:42,198] [INFO] [logging.py:96:log_dist] [Rank 0] step=180, skipped=0, lr=[1.8769510399999998e-05, 1.8769510399999998e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 180 loss: 4.1890 iter time (s): 25.457 samples/sec: 10.056
+ iteration      180/ 1144409 | consumed samples:        46080 | consumed tokens:     94371840 | elapsed time per iteration (ms): 25616.9 | learning rate: 1.877E-05 | global batch size:   256 | lm loss: 4.219688E+00 | loss scale: 2048.0 | grad norm: 1.068 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.993 | tokens per gpu per second (tgs): 20466.452 | TFLOPs: 15.21 |
+[2024-03-27 20:33:58,510] [INFO] [logging.py:96:log_dist] [Rank 0] step=190, skipped=0, lr=[1.9818086399999997e-05, 1.9818086399999997e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 190 loss: 4.0537 iter time (s): 25.474 samples/sec: 10.049
+ iteration      190/ 1144409 | consumed samples:        48640 | consumed tokens:     99614720 | elapsed time per iteration (ms): 25631.5 | learning rate: 1.982E-05 | global batch size:   256 | lm loss: 4.141885E+00 | loss scale: 2048.0 | grad norm: 1.292 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.988 | tokens per gpu per second (tgs): 20454.844 | TFLOPs: 15.20 |
+[2024-03-27 20:38:14,530] [INFO] [logging.py:96:log_dist] [Rank 0] step=200, skipped=0, lr=[2.0866662399999997e-05, 2.0866662399999997e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 200 loss: 4.0417 iter time (s): 25.446 samples/sec: 10.060
+ iteration      200/ 1144409 | consumed samples:        51200 | consumed tokens:    104857600 | elapsed time per iteration (ms): 25602.6 | learning rate: 2.087E-05 | global batch size:   256 | lm loss: 4.070457E+00 | loss scale: 2048.0 | grad norm: 1.255 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 9.999 | tokens per gpu per second (tgs): 20477.881 | TFLOPs: 15.22 |
+wandb: WARNING (User provided step: 51200 is less than current step: 51201. Dropping entry: {'Train/Samples/eval_loss': 4.017703533172607, '_timestamp': 1711571901.9603267}).
+wandb: WARNING (User provided step: 51200 is less than current step: 51201. Dropping entry: {'Train/Samples/eval_loss': 4.029958248138428, '_timestamp': 1711571909.2287085}).
+wandb: WARNING (User provided step: 51200 is less than current step: 51201. Dropping entry: {'Train/Samples/eval_loss': 4.03992223739624, '_timestamp': 1711571916.4617255}).
+wandb: WARNING (User provided step: 51200 is less than current step: 51201. Dropping entry: {'Train/Samples/eval_loss': 3.9657185077667236, '_timestamp': 1711571923.6883318}).
+wandb: WARNING (User provided step: 51200 is less than current step: 51201. Dropping entry: {'Train/Samples/eval_loss': 3.9869096279144287, '_timestamp': 1711571930.9357524}).
+wandb: WARNING (User provided step: 51200 is less than current step: 51201. Dropping entry: {'Train/Samples/eval_loss': 3.994244337081909, '_timestamp': 1711571938.204981}).
+wandb: WARNING (User provided step: 51200 is less than current step: 51201. Dropping entry: {'Train/Samples/eval_loss': 3.9956440925598145, '_timestamp': 1711571945.4440367}).
+wandb: WARNING (User provided step: 51200 is less than current step: 51201. Dropping entry: {'Train/Samples/eval_loss': 4.020970821380615, '_timestamp': 1711571952.6958494}).
+wandb: WARNING (User provided step: 51200 is less than current step: 51201. Dropping entry: {'Train/Samples/eval_loss': 3.9674737453460693, '_timestamp': 1711571959.9591277}).
+-----------------------------------------------------------------------------------------------
+ validation loss at iteration 200 | lm loss value: 4.003139E+00 | lm loss PPL: 5.476978E+01 |
+-----------------------------------------------------------------------------------------------
+wandb: WARNING (User provided step: 51200 is less than current step: 51201. Dropping entry: {'Train/Samples/eval_loss': 4.012903690338135, '_timestamp': 1711571967.2351148}).
+[2024-03-27 20:43:43,196] [INFO] [logging.py:96:log_dist] [Rank 0] step=210, skipped=0, lr=[2.1915238399999997e-05, 2.1915238399999997e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 210 loss: 4.0255 iter time (s): 25.456 samples/sec: 10.057
+ iteration      210/ 1144409 | consumed samples:        53760 | consumed tokens:    110100480 | elapsed time per iteration (ms): 32864.8 | learning rate: 2.192E-05 | global batch size:   256 | lm loss: 4.007503E+00 | loss scale: 2048.0 | grad norm: 1.256 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 7.789 | tokens per gpu per second (tgs): 15952.879 | TFLOPs: 11.86 |
+[2024-03-27 20:47:59,132] [INFO] [logging.py:96:log_dist] [Rank 0] step=220, skipped=0, lr=[2.2963814399999997e-05, 2.2963814399999997e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 220 loss: 3.9560 iter time (s): 25.439 samples/sec: 10.063
+ iteration      220/ 1144409 | consumed samples:        56320 | consumed tokens:    115343360 | elapsed time per iteration (ms): 25593.5 | learning rate: 2.296E-05 | global batch size:   256 | lm loss: 3.963253E+00 | loss scale: 2048.0 | grad norm: 1.075 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 10.003 | tokens per gpu per second (tgs): 20485.217 | TFLOPs: 15.22 |
+[2024-03-27 20:52:15,092] [INFO] [logging.py:96:log_dist] [Rank 0] step=230, skipped=0, lr=[2.40123904e-05, 2.40123904e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 230 loss: 3.8678 iter time (s): 25.440 samples/sec: 10.063
+ iteration      230/ 1144409 | consumed samples:        58880 | consumed tokens:    120586240 | elapsed time per iteration (ms): 25596.7 | learning rate: 2.401E-05 | global batch size:   256 | lm loss: 3.913029E+00 | loss scale: 2048.0 | grad norm: 1.546 | num zeros: 0.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 10.001 | tokens per gpu per second (tgs): 20482.618 | TFLOPs: 15.22 |
+[2024-03-27 20:56:31,386] [INFO] [logging.py:96:log_dist] [Rank 0] step=240, skipped=0, lr=[2.50609664e-05, 2.50609664e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+steps: 240 loss: 3.8287 iter time (s): 25.469 samples/sec: 10.051
