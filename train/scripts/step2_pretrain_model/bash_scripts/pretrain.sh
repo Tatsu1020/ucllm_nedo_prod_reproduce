@@ -4,8 +4,8 @@
 #SBATCH --partition=g2
 #SBATCH --time=14:00:00
 #SBATCH --nodes=1
-#SBATCH --job-name=pretrain_mistral
-#SBATCH --output=pretrain_mistral.out
+#SBATCH --job-name=pretrain_gpt3_small
+#SBATCH --output=pretrain_gpt3_small.out
 #SBATCH --gpus-per-node=1
 
 # Command(s) goes here
