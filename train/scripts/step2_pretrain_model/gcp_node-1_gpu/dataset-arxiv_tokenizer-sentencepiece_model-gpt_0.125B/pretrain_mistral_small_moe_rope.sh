@@ -325,6 +325,8 @@ megatron_options=" \
     --paged-kv-block-size ${paged_kv_block_size} \
     --num-experts-switch ${num_experts_switch} \
     --swiglu \
+    --use-rotary-position-embeddings \
+    --rotary-percent 0.25 \
     --max-position-embeddings ${seq_len} \
     --train-tokens ${train_tokens} \
     --train-samples ${train_samples} \

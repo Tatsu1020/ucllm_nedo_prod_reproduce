@@ -15,5 +15,6 @@ train/hostfile
 train/hostfile*
 train/output/
 train/scripts/step2_pretrain_model/wandb/*
+train/scripts/step2_pretrain_model/jobs/outs/*
 
 Miniconda*

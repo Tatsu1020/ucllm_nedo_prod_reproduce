@@ -5,7 +5,7 @@
 #SBATCH --time=14:00:00
 #SBATCH --nodes=1
 #SBATCH --job-name=pretrain_gpt3_small
-#SBATCH --output=pretrain_gpt3_small.out
+#SBATCH --output=./jobs/outs/pretrain_gpt3_small.out
 #SBATCH --gpus-per-node=1
 
 # Command(s) goes here
