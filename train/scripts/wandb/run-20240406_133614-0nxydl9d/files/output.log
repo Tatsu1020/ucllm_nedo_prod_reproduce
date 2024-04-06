@@ -1,0 +1,209 @@
+[2024-04-06 13:36:20,141] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Flops Profiler Enabled: False
+[2024-04-06 13:36:20,142] [INFO] [logging.py:96:log_dist] [Rank 0] Using client Optimizer as basic optimizer
+[2024-04-06 13:36:20,143] [INFO] [logging.py:96:log_dist] [Rank 0] Removing param_group that has no 'params' in the basic Optimizer
+[2024-04-06 13:36:20,147] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Basic Optimizer = FusedAdam
+[2024-04-06 13:36:20,147] [INFO] [logging.py:96:log_dist] [Rank 0] Creating fp16 optimizer with dynamic loss scale
+[2024-04-06 13:36:20,237] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Final Optimizer = FusedAdam
+[2024-04-06 13:36:20,238] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed using client LR scheduler
+[2024-04-06 13:36:20,238] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed LR Scheduler = <megatron.optimizer_param_scheduler.OptimizerParamScheduler object at 0x7f38aeb695b0>
+[2024-04-06 13:36:20,239] [INFO] [logging.py:96:log_dist] [Rank 0] step=0, skipped=0, lr=[0.0, 0.0], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2024-04-06 13:36:20,239] [INFO] [config.py:979:print] DeepSpeedEngine configuration:
+[2024-04-06 13:36:20,240] [INFO] [config.py:983:print]   activation_checkpointing_config  {
+    "partition_activations": false,
+    "contiguous_memory_optimization": false,
+    "cpu_checkpointing": false,
+    "number_checkpoints": null,
+    "synchronize_checkpoint_boundary": false,
+    "profile": false
+}
+[2024-04-06 13:36:20,241] [INFO] [config.py:983:print]   aio_config ................... {'block_size': 1048576, 'queue_depth': 8, 'thread_count': 1, 'single_submit': False, 'overlap_events': True}
+[2024-04-06 13:36:20,241] [INFO] [config.py:983:print]   amp_enabled .................. False
+[2024-04-06 13:36:20,242] [INFO] [config.py:983:print]   amp_params ................... False
+[2024-04-06 13:36:20,242] [INFO] [config.py:983:print]   autotuning_config ............ {
+    "enabled": false,
+    "start_step": null,
+    "end_step": null,
+    "metric_path": null,
+    "arg_mappings": null,
+    "metric": "throughput",
+    "model_info": null,
+    "results_dir": "autotuning_results",
+    "exps_dir": "autotuning_exps",
+    "overwrite": true,
+    "fast": true,
+    "start_profile_step": 3,
+    "end_profile_step": 5,
+    "tuner_type": "gridsearch",
+    "tuner_early_stopping": 5,
+    "tuner_num_trials": 50,
+    "model_info_path": null,
+    "mp_size": 1,
+    "max_train_batch_size": null,
+    "min_train_batch_size": 1,
+    "max_train_micro_batch_size_per_gpu": 1.024000e+03,
+    "min_train_micro_batch_size_per_gpu": 1,
+    "num_tuning_micro_batch_sizes": 3
+}
+[2024-04-06 13:36:20,243] [INFO] [config.py:983:print]   bfloat16_enabled ............. False
+[2024-04-06 13:36:20,243] [INFO] [config.py:983:print]   checkpoint_parallel_write_pipeline  False
+[2024-04-06 13:36:20,244] [INFO] [config.py:983:print]   checkpoint_tag_validation_enabled  True
+[2024-04-06 13:36:20,244] [INFO] [config.py:983:print]   checkpoint_tag_validation_fail  False
+[2024-04-06 13:36:20,244] [INFO] [config.py:983:print]   comms_config ................. <deepspeed.comm.config.DeepSpeedCommsConfig object at 0x7f38801fa880>
+[2024-04-06 13:36:20,245] [INFO] [config.py:983:print]   communication_data_type ...... None
+[2024-04-06 13:36:20,245] [INFO] [config.py:983:print]   compression_config ........... {'weight_quantization': {'shared_parameters': {'enabled': False, 'quantizer_kernel': False, 'schedule_offset': 0, 'quantize_groups': 1, 'quantize_verbose': False, 'quantization_type': 'symmetric', 'quantize_weight_in_forward': False, 'rounding': 'nearest', 'fp16_mixed_quantize': False, 'quantize_change_ratio': 0.001}, 'different_groups': {}}, 'activation_quantization': {'shared_parameters': {'enabled': False, 'quantization_type': 'symmetric', 'range_calibration': 'dynamic', 'schedule_offset': 1000}, 'different_groups': {}}, 'sparse_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'row_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'head_pruning': {'shared_parameters': {'enabled': False, 'method': 'topk', 'schedule_offset': 1000}, 'different_groups': {}}, 'channel_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'layer_reduction': {'enabled': False}}
+[2024-04-06 13:36:20,246] [INFO] [config.py:983:print]   curriculum_enabled_legacy .... False
+[2024-04-06 13:36:20,246] [INFO] [config.py:983:print]   curriculum_params_legacy ..... False
+[2024-04-06 13:36:20,246] [INFO] [config.py:983:print]   data_efficiency_config ....... {'enabled': False, 'seed': 1234, 'data_sampling': {'enabled': False, 'num_epochs': 1000, 'num_workers': 0, 'curriculum_learning': {'enabled': False}}, 'data_routing': {'enabled': False, 'random_ltd': {'enabled': False, 'layer_token_lr_schedule': {'enabled': False}}}}
+[2024-04-06 13:36:20,247] [INFO] [config.py:983:print]   data_efficiency_enabled ...... False
+[2024-04-06 13:36:20,247] [INFO] [config.py:983:print]   dataloader_drop_last ......... False
+[2024-04-06 13:36:20,248] [INFO] [config.py:983:print]   disable_allgather ............ False
+[2024-04-06 13:36:20,248] [INFO] [config.py:983:print]   dump_state ................... False
+[2024-04-06 13:36:20,248] [INFO] [config.py:983:print]   dynamic_loss_scale_args ...... {'init_scale': 2048, 'scale_window': 500, 'delayed_shift': 2, 'consecutive_hysteresis': False, 'min_scale': 1}
+[2024-04-06 13:36:20,249] [INFO] [config.py:983:print]   eigenvalue_enabled ........... False
+[2024-04-06 13:36:20,249] [INFO] [config.py:983:print]   eigenvalue_gas_boundary_resolution  1
+[2024-04-06 13:36:20,250] [INFO] [config.py:983:print]   eigenvalue_layer_name ........ bert.encoder.layer
+[2024-04-06 13:36:20,250] [INFO] [config.py:983:print]   eigenvalue_layer_num ......... 0
+[2024-04-06 13:36:20,250] [INFO] [config.py:983:print]   eigenvalue_max_iter .......... 100
+[2024-04-06 13:36:20,251] [INFO] [config.py:983:print]   eigenvalue_stability ......... 1e-06
+[2024-04-06 13:36:20,251] [INFO] [config.py:983:print]   eigenvalue_tol ............... 0.01
+[2024-04-06 13:36:20,251] [INFO] [config.py:983:print]   eigenvalue_verbose ........... False
+[2024-04-06 13:36:20,252] [INFO] [config.py:983:print]   elasticity_enabled ........... False
+[2024-04-06 13:36:20,252] [INFO] [config.py:983:print]   flops_profiler_config ........ {
+    "enabled": false,
+    "recompute_fwd_factor": 0.0,
+    "profile_step": 1,
+    "module_depth": -1,
+    "top_modules": 1,
+    "detailed": true,
+    "output_file": null
+}
+[2024-04-06 13:36:20,253] [INFO] [config.py:983:print]   fp16_auto_cast ............... False
+[2024-04-06 13:36:20,253] [INFO] [config.py:983:print]   fp16_enabled ................. True
+[2024-04-06 13:36:20,253] [INFO] [config.py:983:print]   fp16_master_weights_and_gradients  False
+[2024-04-06 13:36:20,254] [INFO] [config.py:983:print]   global_rank .................. 0
+[2024-04-06 13:36:20,254] [INFO] [config.py:983:print]   grad_accum_dtype ............. None
+[2024-04-06 13:36:20,255] [INFO] [config.py:983:print]   gradient_accumulation_steps .. 16
+[2024-04-06 13:36:20,255] [INFO] [config.py:983:print]   gradient_clipping ............ 1.0
+[2024-04-06 13:36:20,255] [INFO] [config.py:983:print]   gradient_predivide_factor .... 1.0
+[2024-04-06 13:36:20,256] [INFO] [config.py:983:print]   hybrid_engine ................ enabled=False max_out_tokens=512 inference_tp_size=1 release_inference_cache=False pin_parameters=True tp_gather_partition_size=8
+[2024-04-06 13:36:20,256] [INFO] [config.py:983:print]   initial_dynamic_scale ........ 2048
+[2024-04-06 13:36:20,257] [INFO] [config.py:983:print]   load_universal_checkpoint .... False
+[2024-04-06 13:36:20,257] [INFO] [config.py:983:print]   loss_scale ................... 0
+[2024-04-06 13:36:20,257] [INFO] [config.py:983:print]   memory_breakdown ............. False
+[2024-04-06 13:36:20,258] [INFO] [config.py:983:print]   mics_hierarchial_params_gather  False
+[2024-04-06 13:36:20,258] [INFO] [config.py:983:print]   mics_shard_size .............. -1
+[2024-04-06 13:36:20,259] [INFO] [config.py:983:print]   monitor_config ............... tensorboard=TensorBoardConfig(enabled=False, output_path='', job_name='DeepSpeedJobName') wandb=WandbConfig(enabled=True, group=None, team=None, project='geniac') csv_monitor=CSVConfig(enabled=False, output_path='', job_name='DeepSpeedJobName') enabled=True
+[2024-04-06 13:36:20,259] [INFO] [config.py:983:print]   nebula_config ................ {
+    "enabled": false,
+    "persistent_storage_path": null,
+    "persistent_time_interval": 100,
+    "num_of_version_in_retention": 2,
+    "enable_nebula_load": true,
+    "load_path": null
+}
+[2024-04-06 13:36:20,260] [INFO] [config.py:983:print]   optimizer_legacy_fusion ...... False
+[2024-04-06 13:36:20,260] [INFO] [config.py:983:print]   optimizer_name ............... None
+[2024-04-06 13:36:20,260] [INFO] [config.py:983:print]   optimizer_params ............. None
+[2024-04-06 13:36:20,261] [INFO] [config.py:983:print]   pipeline ..................... {'stages': 'auto', 'partition': 'best', 'seed_layers': False, 'activation_checkpoint_interval': 0, 'pipe_partitioned': True, 'grad_partitioned': True}
+[2024-04-06 13:36:20,261] [INFO] [config.py:983:print]   pld_enabled .................. False
+[2024-04-06 13:36:20,262] [INFO] [config.py:983:print]   pld_params ................... False
+[2024-04-06 13:36:20,262] [INFO] [config.py:983:print]   prescale_gradients ........... True
+[2024-04-06 13:36:20,262] [INFO] [config.py:983:print]   scheduler_name ............... None
+[2024-04-06 13:36:20,263] [INFO] [config.py:983:print]   scheduler_params ............. None
+[2024-04-06 13:36:20,263] [INFO] [config.py:983:print]   seq_parallel_communication_data_type  torch.float32
+[2024-04-06 13:36:20,264] [INFO] [config.py:983:print]   sparse_attention ............. None
+[2024-04-06 13:36:20,264] [INFO] [config.py:983:print]   sparse_gradients_enabled ..... False
+[2024-04-06 13:36:20,264] [INFO] [config.py:983:print]   steps_per_print .............. 10
+[2024-04-06 13:36:20,265] [INFO] [config.py:983:print]   train_batch_size ............. 256
+[2024-04-06 13:36:20,265] [INFO] [config.py:983:print]   train_micro_batch_size_per_gpu  16
+[2024-04-06 13:36:20,265] [INFO] [config.py:983:print]   use_data_before_expert_parallel_  False
+[2024-04-06 13:36:20,266] [INFO] [config.py:983:print]   use_node_local_storage ....... False
+[2024-04-06 13:36:20,266] [INFO] [config.py:983:print]   wall_clock_breakdown ......... False
+[2024-04-06 13:36:20,267] [INFO] [config.py:983:print]   weight_quantization_config ... None
+[2024-04-06 13:36:20,267] [INFO] [config.py:983:print]   world_size ................... 1
+[2024-04-06 13:36:20,267] [INFO] [config.py:983:print]   zero_allow_untested_optimizer  False
+[2024-04-06 13:36:20,268] [INFO] [config.py:983:print]   zero_config .................. stage=0 contiguous_gradients=True reduce_scatter=True reduce_bucket_size=500,000,000 use_multi_rank_bucket_allreduce=True allgather_partitions=True allgather_bucket_size=500,000,000 overlap_comm=False load_from_fp32_weights=True elastic_checkpoint=False offload_param=None offload_optimizer=None sub_group_size=1,000,000,000 cpu_offload_param=None cpu_offload_use_pin_memory=None cpu_offload=None prefetch_bucket_size=50,000,000 param_persistence_threshold=100,000 model_persistence_threshold=sys.maxsize max_live_parameters=1,000,000,000 max_reuse_distance=1,000,000,000 gather_16bit_weights_on_model_save=False stage3_gather_fp16_weights_on_model_save=False ignore_unused_parameters=True legacy_stage1=False round_robin_gradients=False zero_hpz_partition_size=1 zero_quantized_weights=False zero_quantized_nontrainable_weights=False zero_quantized_gradients=False mics_shard_size=-1 mics_hierarchical_params_gather=False memory_efficient_linear=True pipeline_loading_checkpoint=False override_module_apply=True
+[2024-04-06 13:36:20,268] [INFO] [config.py:983:print]   zero_enabled ................. False
+[2024-04-06 13:36:20,269] [INFO] [config.py:983:print]   zero_force_ds_cpu_optimizer .. True
+[2024-04-06 13:36:20,269] [INFO] [config.py:983:print]   zero_optimization_stage ...... 0
+[2024-04-06 13:36:20,270] [INFO] [config.py:969:print_user_config]   json = {
+    "train_batch_size": 256,
+    "train_micro_batch_size_per_gpu": 16,
+    "steps_per_print": 10,
+    "zero_optimization": {
+        "stage": 0
+    },
+    "gradient_clipping": 1.0,
+    "prescale_gradients": true,
+    "fp16": {
+        "enabled": true,
+        "loss_scale": 0,
+        "loss_scale_window": 500,
+        "hysteresis": 2,
+        "min_loss_scale": 1,
+        "initial_scale_power": 11
+    },
+    "wall_clock_breakdown": false,
+    "wandb": {
+        "enabled": true,
+        "project": "geniac"
+    }
+}
+[2024-04-06 13:36:20,270] [INFO] [engine.py:99:__init__] CONFIG: micro_batches=16 micro_batch_size=16
+[2024-04-06 13:36:20,271] [INFO] [engine.py:139:__init__] is_pipe_partitioned= False is_grad_partitioned= False
+[2024-04-06 13:36:20,397] [INFO] [engine.py:158:__init__] RANK=0 STAGE=0 LAYERS=17 [0, 17) STAGE_PARAMS=88201728 (88.202M) TOTAL_PARAMS=88201728 (88.202M) UNIQUE_PARAMS=88201728 (88.202M)
+[2024-04-06 13:36:20,399] [WARNING] [engine.py:2703:load_checkpoint] Unable to find latest file at /home/ext_tatsunari1020_gmail_com/../../persistentshare/storage/team_haijima/tatsu/model_checkpoint/checkpoint/gpt_0.125B_tok300B_lr6.0e-4_min1.0e-6_w3000M_d300B_cosine_gbs256_mbs16_g_pp1_seed1234_rebase/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+WARNING: could not find the metadata file /home/ext_tatsunari1020_gmail_com/../../persistentshare/storage/team_haijima/tatsu/model_checkpoint/checkpoint/gpt_0.125B_tok300B_lr6.0e-4_min1.0e-6_w3000M_d300B_cosine_gbs256_mbs16_g_pp1_seed1234_rebase
+    will not load any checkpoints and will start from random
+(min, max) time across ranks (ms):
+    load-checkpoint ................................: (2.07, 2.07)
+[after model, optimizer, and learning rate scheduler are built] datetime: 2024-04-06 13:36:20
+> building train, validation, and test datasets ...
+ > datasets target sizes (minimum size):
+    train:      292968750
+    validation: 29299200
+    test:       2560
+> building train, validation, and test datasets for GPT ...
+Single data path provided for train, valid & test
+ > building dataset index ...
+    reading sizes...
+    reading pointers...
+    reading document index...
+    creating numpy buffer of mmap...
+    creating memory view of numpy buffer...
+ > finished creating indexed dataset in 0.016608 seconds
+    number of documents: 13953
+ > dataset split:
+    train:
+     document indices in [0, 13241) total of 13241 documents
+    validation:
+     document indices in [13241, 13939) total of 698 documents
+    test:
+     document indices in [13939, 13953) total of 14 documents
+ > loading doc-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/1e6beea2fbcce9182299ab70d012dd0b_doc_idx.npy
+ > loading sample-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/1e6beea2fbcce9182299ab70d012dd0b_sample_idx.npy
+ > loading shuffle-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/1e6beea2fbcce9182299ab70d012dd0b_shuffle_idx.npy
+    loaded indexed file in 0.032 seconds
+    total number of samples: 292975407
+    total number of epochs: 1345
+ > loading doc-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/c7910580994501e52505bb2f374d9ffe_doc_idx.npy
+ > loading sample-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/c7910580994501e52505bb2f374d9ffe_sample_idx.npy
+ > loading shuffle-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/c7910580994501e52505bb2f374d9ffe_shuffle_idx.npy
+    loaded indexed file in 0.031 seconds
+    total number of samples: 29303160
+    total number of epochs: 2411
+ > loading doc-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/004a45e3a9b585b58cc83796f8c5d0b1_doc_idx.npy
+ > loading sample-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/004a45e3a9b585b58cc83796f8c5d0b1_sample_idx.npy
+ > loading shuffle-idx mapping from /home/ext_tatsunari1020_gmail_com/ucllm_nedo_prod_reproduce/train/Megatron-DeepSpeed/dataset/index-cache/004a45e3a9b585b58cc83796f8c5d0b1_shuffle_idx.npy
+    loaded indexed file in 0.009 seconds
+    total number of samples: 2593
+    total number of epochs: 13
+> finished creating GPT datasets ...
+[after dataloaders are built] datetime: 2024-04-06 13:36:20
+done with setup ...
+(min, max) time across ranks (ms):
+    model-and-optimizer-setup ......................: (8088.80, 8088.80)
+    train/valid/test-data-iterators-setup ..........: (342.53, 342.53)
+training ...
+[before the start of training step] datetime: 2024-04-06 13:36:21
+/home/ext_tatsunari1020_gmail_com/miniconda3/envs/.venv/lib/python3.9/site-packages/torch/autograd/__init__.py:266: UserWarning: c10d::broadcast_: an autograd kernel was not registered to the Autograd key(s) but we are trying to backprop through it. This may lead to silently incorrect behavior. This behavior is deprecated and will be removed in a future version of PyTorch. If your operator is differentiable, please ensure you have registered an autograd kernel to the correct Autograd key (e.g. DispatchKey::Autograd, DispatchKey::CompositeImplicitAutograd). If your operator is not differentiable, or to squash this warning and use the previous behavior, please register torch::CppFunction::makeFallthrough() to DispatchKey::Autograd. (Triggered internally at /opt/conda/conda-bld/pytorch_1704987277512/work/torch/csrc/autograd/autograd_not_implemented_fallback.cpp:63.)
