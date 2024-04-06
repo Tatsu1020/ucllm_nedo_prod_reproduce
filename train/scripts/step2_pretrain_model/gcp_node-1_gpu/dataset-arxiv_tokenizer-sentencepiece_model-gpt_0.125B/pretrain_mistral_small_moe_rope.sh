@@ -61,7 +61,7 @@ seq_len=2048
 ## provide better zero-shot eval results.
 
 ## Mistral Small MoE Switch 125M
-model="mistral_moe_switch"
+model="mistral_moe_switch_rope"
 model_size=0.125
 num_layers=12
 hidden_size=768
