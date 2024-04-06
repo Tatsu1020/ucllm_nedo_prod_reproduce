@@ -3,7 +3,7 @@
 # Command line options go here
 #SBATCH --partition=g2
 #SBATCH --time=01:00:00
-#SBATCH --nodes=7
+#SBATCH --nodelist=mlpre-g2-ghpc-7
 #SBATCH --job-name=pretrain_gpt3_small
 #SBATCH --output=./jobs/outs/pretrain_gpt3_small_test.out
 #SBATCH --gpus-per-node=1
