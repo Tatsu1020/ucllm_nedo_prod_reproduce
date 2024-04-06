@@ -387,7 +387,7 @@ fi
 
 # Creates a hostfile.
 script_dir=$(dirname "$0")
-hostfile="${script_dir}/hostfile_jobid-${SLURM_JOB_ID}"
+hostfile="${script_dir}/hostfiles/hostfile_jobid-${SLURM_JOB_ID}"
 nodes=$(scontrol show hostnames $SLURM_JOB_NODELIST)
 
 for node in $nodes
