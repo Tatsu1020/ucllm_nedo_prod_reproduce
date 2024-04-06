@@ -61,6 +61,7 @@ seq_len=2048
 ## provide better zero-shot eval results.
 
 ## GPT-3 Small 125M
+model="gpt3_multinode_test"
 model_size=0.125
 num_layers=12
 hidden_size=768
@@ -255,7 +256,7 @@ fi
 echo ""
 
 prescale_grad="true"
-jobname="gpt_${model_size}B_tok${train_tokens_in_billion}B"
+jobname="${model}_${model_size}B_tok${train_tokens_in_billion}B"
 jobname="${jobname}_lr${lr}_min${min_lr}_w${lr_warmup_tokens_in_million}M_d${lr_decay_tokens_in_billion}B_${lr_decay_style}"
 jobname="${jobname}_gbs${global_batch_size}_mbs${batch_size}_g${num_gpus}"
 if [[ $zero_stage -gt 0 ]]; then
