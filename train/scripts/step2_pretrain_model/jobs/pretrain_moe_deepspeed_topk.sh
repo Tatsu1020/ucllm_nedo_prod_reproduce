@@ -4,7 +4,7 @@
 #SBATCH --partition=g2
 #SBATCH --time=06:00:00
 #SBATCH --gpus-per-node=4
-#SBATCH --nodelist=mlpre-g2-ghpc-7
+#SBATCH --nodelist=mlpre-g2-ghpc-8
 #SBATCH --job-name=pretrain
 #SBATCH --output=./jobs/outs/pretrain_mistral_ds_moe_top2.out
 #SBATCH --gpus-per-node=1
