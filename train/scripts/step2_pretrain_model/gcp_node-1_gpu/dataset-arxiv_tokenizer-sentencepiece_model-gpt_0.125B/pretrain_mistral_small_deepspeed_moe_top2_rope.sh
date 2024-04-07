@@ -219,8 +219,8 @@ num_gpus=$((${num_gpus_pernode} * ${num_node}))
 dp_size=$(( ${num_gpus} / ${pp_size} / ${mp_size} ))
 
 ### deepspeed MoE configs
-# EP_SIZE=4 
-#
+EP_SIZE=4 
+
 # if [[ $EP_SIZE -gt $num_gpus ]]; then
 #     EP_PARALLEL_SIZE=$num_gpus
 # else
