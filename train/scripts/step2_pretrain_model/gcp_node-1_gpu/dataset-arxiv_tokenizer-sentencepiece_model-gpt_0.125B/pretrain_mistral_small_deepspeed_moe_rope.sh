@@ -221,11 +221,12 @@ dp_size=$(( ${num_gpus} / ${pp_size} / ${mp_size} ))
 ### deepspeed MoE configs
 EP_SIZE=4 
 
-if [[ $EP_SIZE -gt $num_gpus ]]; then
-    EP_PARALLEL_SIZE=$num_gpus
-else
-    EP_PARALLEL_SIZE=$EP_SIZE
-fi
+#if [[ $EP_SIZE -gt $num_gpus ]]; then
+#    EP_PARALLEL_SIZE=$num_gpus
+#else
+#    EP_PARALLEL_SIZE=$EP_SIZE
+#fi
+EP_PARALLEL_SIZE=4
 
 # MoE loss coefficient
 MLC=0.01
