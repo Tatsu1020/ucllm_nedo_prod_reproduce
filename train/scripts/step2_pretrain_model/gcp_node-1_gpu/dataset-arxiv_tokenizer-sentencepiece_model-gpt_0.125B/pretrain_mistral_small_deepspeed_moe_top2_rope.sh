@@ -70,6 +70,7 @@ num_key_value_heads=4
 window_size=1024 # if -1, local attention won't be applied
 paged_kv_block_size=0 # if 0, paged atten won't be used
 global_batch_size=256
+topk=2
 lr=6.0e-4
 min_lr=1.0e-6
 init_std=0.02
@@ -337,6 +338,7 @@ megatron_options=" \
     --moe-train-capacity-factor ${MOE_TRAIN_CAP_FACTOR} \
     --moe-eval-capacity-factor ${MOE_EVAL_CAP_FACTOR} \
     --moe-min-capacity ${MOE_MIN_CAP} \
+    --topk ${topk} \
     --init-method-std ${init_std} \
     --lr-decay-tokens ${lr_decay_tokens} \
     --lr-warmup-tokens ${lr_warmup_tokens} \
