@@ -61,7 +61,7 @@ seq_len=2048
 ## provide better zero-shot eval results.
 
 ## Mistral Small MoE Switch 125M
-model="mistral_moe_deepspeed_rope"
+model="mistral_moe_deepspeed_top2_rope"
 model_size=0.125
 num_layers=12
 hidden_size=768
@@ -219,13 +219,15 @@ num_gpus=$((${num_gpus_pernode} * ${num_node}))
 dp_size=$(( ${num_gpus} / ${pp_size} / ${mp_size} ))
 
 ### deepspeed MoE configs
-EP_SIZE=4 
+# EP_SIZE=4 
+#
+# if [[ $EP_SIZE -gt $num_gpus ]]; then
+#     EP_PARALLEL_SIZE=$num_gpus
+# else
+#     EP_PARALLEL_SIZE=$EP_SIZE
+# fi
 
-if [[ $EP_SIZE -gt $num_gpus ]]; then
-    EP_PARALLEL_SIZE=$num_gpus
-else
-    EP_PARALLEL_SIZE=$EP_SIZE
-fi
+EP_PARALLEL_SIZE=4
 
 # MoE loss coefficient
 MLC=0.01
