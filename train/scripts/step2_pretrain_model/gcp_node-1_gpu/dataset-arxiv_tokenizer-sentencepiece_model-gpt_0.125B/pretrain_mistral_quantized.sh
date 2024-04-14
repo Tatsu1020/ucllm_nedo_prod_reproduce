@@ -59,7 +59,7 @@ echo ""
 
 ## Mistral Small --- 125M
 seq_len=2048
-model="mistral_small"
+model="mistral_small_quantized"
 model_size=0.125
 num_layers=12
 hidden_size=768
