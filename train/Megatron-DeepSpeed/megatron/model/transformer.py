@@ -442,9 +442,9 @@ class FlashSelfAttention(torch.nn.Module):
             output = self.flash_attn_func(
                 q, k, v, cu_seqlens_q, cu_seqlens_k, seqlen_q, seqlen_k,
                 dropout_p,
-                softmax_scale=self.softmax_scale, causal=is_causal, window_size=self.window_size #, block_table=block_table
+                softmax_scale=self.softmax_scale, causal=is_causal, window_size=self.window_size, block_table=block_table
             ) if get_accelerator().device_name() == 'cuda' else flash_attn_builder.flash_attn_func(
-                q, k, v, self.dropout_p, self.softmax_scale, is_causal, window_size=self.window_size #, block_table=block_table
+                q, k, v, self.dropout_p, self.softmax_scale, is_causal, window_size=self.window_size, block_table=block_table
             )
         else:
             output = self.flash_attn_func(
@@ -506,8 +506,7 @@ class ParallelAttention(MegatronModule):
 
     def __init__(self, config, layer_number,
                  attention_type=AttnType.self_attn,
-                 attn_mask_type=AttnMaskType.padding,
-                 block_table=None):
+                 attn_mask_type=AttnMaskType.padding):
         super(ParallelAttention, self).__init__()
         args = get_args()
         self.layer_number = max(1, layer_number)
