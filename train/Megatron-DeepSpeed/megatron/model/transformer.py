@@ -440,8 +440,11 @@ class FlashSelfAttention(torch.nn.Module):
                 b=batch_size,
             )
             k = torch.reshape(k, (num_blocks, self.paged_kv_block_size, k_heads, d))
+            print(f"key size: {k.size()}")
             q = torch.reshape(q, (num_blocks, self.paged_kv_block_size, q_heads, d))
+            print(f"q size: {q.size()}")
             v = torch.reshape(v, (num_blocks, self.paged_kv_block_size, v_heads, d))
+            print(f"v size: {v.size()}")
         else:
             block_table = None
 
