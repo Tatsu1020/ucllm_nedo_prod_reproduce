@@ -21,7 +21,7 @@
 
   "wall_clock_breakdown" : false,
 
-   "compression_training": {
+  "compression_training": {
     "weight_quantization": {
       "shared_parameters":{
         "enabled": true,
@@ -67,6 +67,7 @@
         }
       }
     }
+  },
 
   "wandb": {
       "enabled": true,
