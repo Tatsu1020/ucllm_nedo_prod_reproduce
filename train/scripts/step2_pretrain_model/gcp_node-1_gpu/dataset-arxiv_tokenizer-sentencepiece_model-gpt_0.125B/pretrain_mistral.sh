@@ -59,7 +59,7 @@ echo ""
 
 ## Mistral Small --- 125M
 seq_len=2048
-model="mistral_small"
+model="mistral_small_zero1"
 model_size=0.125
 num_layers=12
 hidden_size=768
@@ -169,7 +169,7 @@ pp_size=1
 no_pp="false"
 
 ## ZeRO-based data parallelism, stage=0 will disable ZeRO
-zero_stage=0
+zero_stage=1
 
 ## Total number of GPUs.
 num_gpus_pernode=$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)

@@ -377,7 +377,7 @@ if [[ $iteration -gt 0 ]]; then
 fi
 
  
-deepspeed ${megatron_deepspeed_dir}/pretrain_mistral.py \
+deepspeed --master_port 29600 ${megatron_deepspeed_dir}/pretrain_mistral.py \
     ${megatron_options} \
     ${data_options} \
     ${deepspeed_options} \
