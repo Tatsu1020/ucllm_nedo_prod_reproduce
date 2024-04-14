@@ -403,6 +403,10 @@ class FlashSelfAttention(torch.nn.Module):
 
         batch_size, seqlen_q = q.shape[0], q.shape[1]
         seqlen_k = k.shape[1]
+        k_heads = k.shape[2]
+        q_heads = q.shape[2]
+        v_heads = v.shape[2]
+        d = k.shape[3]
 
         if get_accelerator().device_name() == 'cuda':
             # goes for cuda device
@@ -435,6 +439,9 @@ class FlashSelfAttention(torch.nn.Module):
                 "(b nblocks) -> b nblocks",
                 b=batch_size,
             )
+            k = torch.reshape(k, (num_blocks, self.paged_kv_block_size, k_heads, d))
+            q = torch.reshape(q, (num_blocks, self.paged_kv_block_size, q_heads, d))
+            v = torch.reshape(v, (num_blocks, self.paged_kv_block_size, v_heads, d))
         else:
             block_table = None
 
