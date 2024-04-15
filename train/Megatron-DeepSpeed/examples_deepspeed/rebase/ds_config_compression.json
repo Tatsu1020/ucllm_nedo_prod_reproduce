@@ -44,7 +44,7 @@
               "quantization_period": 1
           },
           "modules": [
-            "encoder.layers"
+            "model.layers"
           ]
         }
       }
