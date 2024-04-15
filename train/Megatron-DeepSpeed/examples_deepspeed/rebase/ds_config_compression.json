@@ -62,7 +62,7 @@
               "bits": 8
           },
           "modules": [
-            "encoder.layers"
+            "model.layers"
           ]
         }
       }
