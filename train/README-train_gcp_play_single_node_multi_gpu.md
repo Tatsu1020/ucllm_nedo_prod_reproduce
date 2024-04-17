@@ -33,6 +33,18 @@ After:
     └── requirements.txt
 ```
 
+### Step 0-0. このgitレポジトリのクローン
+
+```sh
+$ cd ~/
+
+# このレポジトリをucllm_nedo_devという名前でクローンする。
+$ git clone https://github.com/matsuolab/ucllm_nedo_prod.git ucllm_nedo_dev
+
+# ~/ucllm_nedo_dev/train以下のファイル一覧が表示されるか確認。
+$ ls ~/ucllm_nedo_dev/train/
+```
+
 ### Step 0-1. Python仮想環境作成前における下準備
 
 ```sh
@@ -101,7 +113,7 @@ $ conda install pytorch==2.2.0 torchvision==0.17.0 torchaudio==2.2.0 pytorch-cud
 # deepspeedの依存パッケージをインストール。
 (.venv) $ pip install deepspeed-kernels
 
-# deepspeedを指定のバージョンでインストール。このとき、deepspeed関連の拡張機能たち "ops" を事前にビルドしておくために `DS_BUILD_OPS=1` と設定。 
+# deepspeedを指定のバージョンでインストール。このとき、deepspeed関連の拡張機能たち "ops" を事前にビルドしておくために `DS_BUILD_OPS=1` と設定。
 # https://www.deepspeed.ai/tutorials/advanced-install/#pre-install-deepspeed-ops
 # ※しばらく時間がかかるので注意。
 (.venv) $ DS_BUILD_OPS=1 DS_BUILD_EVOFORMER_ATTN=0 DS_BUILD_SPARSE_ATTN=0 pip install deepspeed==0.12.4
@@ -137,7 +149,7 @@ $ conda install pytorch==2.2.0 torchvision==0.17.0 torchaudio==2.2.0 pytorch-cud
 (.venv) $ cd ~/ucllm_nedo_dev/train/apex/ && git fetch origin && git checkout refs/tags/23.08
 
 # nvccが対応しているCUDAのバージョンとPyTorchが依存しているCUDAのバージョンが一致していることを確認。
-(.venv) $ which nvcc && echo "====" && nvcc --version && echo "====" && python -c "import torch; print(torch.__version__)"
+(.venv) $ which nvcc && echo "====" && nvcc --version && echo "====" && python -c "import torch; print(torch.version.cuda)"
 
 # pipのバージョンが23.1以上であることを確認。
 (.venv) $ which pip && echo "====" && pip --version

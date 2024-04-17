@@ -341,6 +341,7 @@ megatron_options=" \
     --weight-decay 0.1 \
     --clip-grad 1.0 \
     --hysteresis 2 \
+    --topk 2 \
     --num-workers ${num_workers} \
     --fp16 \
     --seed ${seed} \

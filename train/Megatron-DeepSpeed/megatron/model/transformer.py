@@ -179,10 +179,12 @@ class SwitchMLP(MegatronModule):
     def __init__(self, config):
         super(SwitchMLP, self).__init__()
         args = get_args()
+        self.k = args.topk
         self.router = torch.nn.Linear(config.hidden_size, args.num_experts_switch)
         self.experts = torch.nn.ModuleList()
         for i in range(args.num_experts_switch):
             self.experts.append(ParallelMLP(config))
+
 
     def forward(self, hidden_states):
         # hidden_states: [s, b, h]
@@ -191,30 +193,21 @@ class SwitchMLP(MegatronModule):
         h = hidden_states.size(2)
         route = self.router(hidden_states)
         route = torch.nn.functional.softmax(route, dim=2)
-        max_prob, max_ind = torch.max(route, dim=2)
-        max_prob = torch.unsqueeze(max_prob, 2) # [s b 1]
+        topk_prob, topk_ind = torch.topk(route, k=self.k, dim=2)
 
-        # TODO (rprenger) TODO this could be made easier to read
-        # Converting [s, b, h] to [s*b, h].
-        # Each vector could be routed differently
-        hidden_states = hidden_states.view(-1, hidden_states.size(2)) # [s*b h]
-        max_prob = max_prob.view(-1, max_prob.size(2)) # [s*b 1]
-        max_ind = max_ind.view(-1) # [s*b]
+        hidden_states = hidden_states.view(-1, hidden_states.size(2))
+        topk_prob = topk_prob.view(-1, topk_prob.size(2))
+        topk_ind = topk_ind.view(-1, topk_ind.size(2))
 
-        output_total = torch.empty_like(hidden_states)
-        output_bias_total = torch.empty_like(hidden_states)
-        #TODO (rprenger) This does each expert in serial, but it could be parallelized
+        output_total = torch.zeros_like(hidden_states)
+        output_bias_total = torch.zeros_like(hidden_states)
 
         for expert_num, expert in enumerate(self.experts):
-            local_indices = (max_ind == expert_num).nonzero()
-            hidden = hidden_states[local_indices,:]
-            output, output_bias = expert(hidden)
-            output_bias = output_bias.expand_as(output)
-            output_total[local_indices,:] = output
-            output_bias_total[local_indices,:] = output_bias
+            batch_idx, nth_expert  = torch.where(topk_ind == expert_num)
+            output, output_bias = expert(hidden_states[batch_idx])
+            output_total[batch_idx] += topk_prob[batch_idx, nth_expert, None] * output
+            output_bias_total[batch_idx] += topk_prob[batch_idx, nth_expert, None] *output_bias
 
-        output_total = output_total*max_prob
-        output_bias_total = output_bias_total*max_prob
         output_total = output_total.view(s, b, h)
         output_bias_total = output_bias_total.view(s, b, h)
 
