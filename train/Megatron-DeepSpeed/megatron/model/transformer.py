@@ -212,6 +212,8 @@ class SwitchMLP(MegatronModule):
         output_total = output_total.view(s, b, h)
         if output_bias is not None:
             output_bias_total = output_bias_total.view(s, b, h)
+        else:
+            output_bias_total = None
 
         return output_total, output_bias_total
 
