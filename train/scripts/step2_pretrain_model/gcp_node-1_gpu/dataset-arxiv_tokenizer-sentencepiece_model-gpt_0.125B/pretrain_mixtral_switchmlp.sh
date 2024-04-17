@@ -195,7 +195,7 @@ dp_size=$(( ${num_gpus} / ${pp_size} / ${mp_size} ))
 ## Make sure that batch_size <= global_batch_size*pp_size*mp_size/num_gpus
 ## Reduce it manually if GPU OOM
 #batch_size=$(( ${global_batch_size} / ${dp_size} ))
-batch_size=16
+batch_size=8
 ###############################################################################
 ### Misc configs
 log_interval=10

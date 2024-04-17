@@ -206,10 +206,12 @@ class SwitchMLP(MegatronModule):
             batch_idx, nth_expert  = torch.where(topk_ind == expert_num)
             output, output_bias = expert(hidden_states[batch_idx])
             output_total[batch_idx] += topk_prob[batch_idx, nth_expert, None] * output
-            output_bias_total[batch_idx] += topk_prob[batch_idx, nth_expert, None] *output_bias
+            if output_bias is not None:
+                output_bias_total[batch_idx] += topk_prob[batch_idx, nth_expert, None] *output_bias
 
         output_total = output_total.view(s, b, h)
-        output_bias_total = output_bias_total.view(s, b, h)
+        if output_bias is not None:
+            output_bias_total = output_bias_total.view(s, b, h)
 
         return output_total, output_bias_total
 
