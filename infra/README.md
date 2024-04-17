@@ -58,7 +58,7 @@ Create a job script to launch in the background:
 #SBATCH --nodes=1
 #SBATCH --job-name=example
 #SBATCH --output=example.out
-#SBATCH --gpus-per-node=2
+#SBATCH --gpus-per-node=1
 
 # Command(s) goes here
 nvidia-smi
@@ -71,6 +71,23 @@ $ sbatch myjob.sh
 
 Submitted batch job 4
 ```
+
+The following statement will be displayed when the maximum number of batch submissions is reached.
+```
+sbatch: error: AssocGrpSubmitJobsLimit
+sbatch: error: Batch job submission failed: Job violates accounting/QOS policy (job submit limit, user's size and/or time limits)
+```
+
+If the specified maximum number of nodes has been reached, the following will be displayed in the NODELIST(REASON) column of the squeue command.
+```
+PartitionNodeLimit
+```
+
+If the specified execution time limit has been reached, the NODELIST(REASON) column of the squeue command will display the following.
+```
+AssocMaxWallDurationPerJobLimit
+```
+
 
 ### Check status
 

@@ -46,9 +46,6 @@ echo ""
 
 ###############################################################################
 ### Main configs
-## GPT-3 models use 2K sequence length/context window
-seq_len=2048
-
 ## The "GPT-3 XXX" below are configs from GPT-3 paper
 ## https://arxiv.org/abs/2005.14165, choose based on
 ## your desired model size or build your own configs
@@ -60,101 +57,77 @@ seq_len=2048
 ## We changed min_lr to a lower number (1.0e-6), which we found is able to
 ## provide better zero-shot eval results.
 
-## Mistral Small MoE Switch 125M
-model="mistral_moe_switch_rope"
+## Mixtral Small --- test version 125M
+seq_len=2048
+model="mixtral_small_switchmlp"
 model_size=0.125
 num_layers=12
 hidden_size=768
+ffn_hidden_size=2048  # for swiglu, (4 * hidden_size * 2 / 3) / 64) * 64 as a default
 num_attn_heads=12
 num_key_value_heads=4
 window_size=1024 # if -1, local attention won't be applied
 paged_kv_block_size=0 # if 0, paged atten won't be used
 num_experts_switch=4
+topk=2
+normalization="rmsnorm"
+norm_eps=1e-6
 global_batch_size=256
+max_position_embeddings=32768
 lr=6.0e-4
 min_lr=1.0e-6
 init_std=0.02
 
-
-## GPT-3 Small 125M
-#model_size=0.125
-#num_layers=12
-#hidden_size=768
-#num_attn_heads=12
-#global_batch_size=256
-#lr=6.0e-4
-#min_lr=1.0e-6
-#init_std=0.02
-
-## GPT-3 Medium 350M
-# model_size=0.35
-# num_layers=24
-# hidden_size=1024
-# num_attn_heads=16
-# global_batch_size=256
-# lr=3.0e-4
-# min_lr=1.0e-6
-# init_std=0.018
-
-## GPT-3 Large 760M
-# model_size=0.76
-# num_layers=24
-# hidden_size=1536
-# num_attn_heads=16
-# global_batch_size=256
-# lr=2.5e-4
-# min_lr=1.0e-6
-# init_std=0.015
-
-## GPT-3 XL 1.3B
-# model_size=1.3
-# num_layers=24
-# hidden_size=2048
-# num_attn_heads=16
-# global_batch_size=512
-# lr=2.0e-4
-# min_lr=1.0e-6
-# init_std=0.013
-
-## GPT-3 2.7B
-# model_size=2.7
-# num_layers=32
-# hidden_size=2560
-# num_attn_heads=32
-# global_batch_size=512
-# lr=1.6e-4
-# min_lr=1.0e-6
-# init_std=0.011
-
-## GPT-3 6.7B
-# model_size=6.7
+## Mixtral 7B*8
+# seq_len=32768
+# model="mixtral_7b_ds_moe"
+# model_size=7
 # num_layers=32
 # hidden_size=4096
+# ffn_hidden_size=14336
 # num_attn_heads=32
-# global_batch_size=1024
-# lr=1.2e-4
+# num_key_value_heads=8
+# window_size=4096 # if -1, local attention won't be applied
+# paged_kv_block_size=0 # if 0, paged atten won't be used
+# normalization="rmsnorm"
+# norm_eps=1e-6
+# global_batch_size=1020
+# max_position_embeddings=131072 # following HF implementaiton, mistral suppports 4096*32 at maximum
+# #FIXME
+# lr=6.0e-4 
 # min_lr=1.0e-6
-# init_std=0.009
+# init_std=0.02
 
-## GPT-3 13B
+## Mixtral 13B*8 --- following llama2 13B configs
+# seq_len=32768
+# model="mixtral_13b_ds_moe"
 # model_size=13
 # num_layers=40
 # hidden_size=5120
+# ffn_hidden_size=14336
 # num_attn_heads=40
-# global_batch_size=1024
+# num_key_value_heads=10
+# window_size=4096 # if -1, local attention won't be applied
+# paged_kv_block_size=0 # if 0, paged atten won't be used
+# normalization="rmsnorm"
+# norm_eps=1e-6
+# global_batch_size=1020
+# max_position_embeddings=131072 # following HF implementaiton, mistral suppports 4096*32 at maximum
 # lr=1.0e-4
 # min_lr=1.0e-6
 # init_std=0.008
 
-## GPT-3 175B
-# model_size=175
-# num_layers=96
-# hidden_size=12288
-# num_attn_heads=96
-# global_batch_size=1536
-# lr=0.6e-4
-# min_lr=1.0e-6
-# init_std=0.005
+# Deepspeed MoE configs
+# num_experts=8 
+# ep_parallel_size=8 # set num_gpus if num_experts > num_gputs else num_experts
+# topk=2
+moe_train_cap_factor=1.0
+moe_eval_cap_factor=1.0
+moe_min_cap=4
+moe_drop_token="true"
+moe_loss_coef=0.01
+
+
 ###############################################################################
 ### Training duration configs
 ## The main termination condition, original GPT-3 paper trains for 300B tokens.
@@ -208,7 +181,7 @@ pp_size=1
 no_pp="false"
 
 ## ZeRO-based data parallelism, stage=0 will disable ZeRO
-zero_stage=0
+zero_stage=1
 
 ## Total number of GPUs.
 num_gpus_pernode=$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)
@@ -222,7 +195,7 @@ dp_size=$(( ${num_gpus} / ${pp_size} / ${mp_size} ))
 ## Make sure that batch_size <= global_batch_size*pp_size*mp_size/num_gpus
 ## Reduce it manually if GPU OOM
 #batch_size=$(( ${global_batch_size} / ${dp_size} ))
-batch_size=8
+batch_size=16
 ###############################################################################
 ### Misc configs
 log_interval=10
@@ -304,7 +277,6 @@ data_options=" \
 
 ## If CL is used, make sure to set "--split" the same as what you used during
 ## offline data analysis&indexing.
-## swiglu is true
 megatron_options=" \
     --override-opt_param-scheduler \
     --adam-beta1 0.9 \
@@ -318,16 +290,30 @@ megatron_options=" \
     --global-batch-size ${global_batch_size} \
     --num-layers ${num_layers} \
     --hidden-size ${hidden_size} \
+    --ffn-hidden-size ${ffn_hidden_size} \
     --num-attention-heads ${num_attn_heads} \
     --num-key-value-heads ${num_key_value_heads} \
     --seq-length ${seq_len} \
     --window-size ${window_size} \
     --paged-kv-block-size ${paged_kv_block_size} \
-    --num-experts-switch ${num_experts_switch} \
     --swiglu \
     --use-rotary-position-embeddings \
     --rotary-percent 0.25 \
-    --max-position-embeddings ${seq_len} \
+    --normalization ${normalization} \
+    --layernorm-epsilon ${norm_eps} \
+    --untie-embeddings-and-output-weights \
+    --attention-dropout 0 \
+    --hidden-dropout 0 \
+    --disable-bias-linear \
+    --no-query-key-layer-scaling \
+    --rotary-percent 0.25 \
+    --max-position-embeddings ${max_position_embeddings} \
+    --num-experts-switch ${num_experts_switch} \
+    --moe-loss-coeff ${moe_loss_coef} \
+    --moe-train-capacity-factor ${moe_train_cap_factor} \
+    --moe-eval-capacity-factor ${moe_eval_cap_factor} \
+    --moe-min-capacity ${moe_min_cap} \
+    --topk ${topk} \
     --train-tokens ${train_tokens} \
     --train-samples ${train_samples} \
     --lr ${lr} \
@@ -341,7 +327,6 @@ megatron_options=" \
     --weight-decay 0.1 \
     --clip-grad 1.0 \
     --hysteresis 2 \
-    --topk 2 \
     --num-workers ${num_workers} \
     --fp16 \
     --seed ${seed} \
@@ -408,13 +393,6 @@ if [[ $iteration -gt 0 ]]; then
     ds_ssh "echo $iteration > $iteration_file"
     ds_ssh "echo $iteration_2 > $iteration_file_2"
 fi
-
- 
-# deepspeed ${megatron_deepspeed_dir}/pretrain_gpt.py \
-#     ${megatron_options} \
-#     ${data_options} \
-#     ${deepspeed_options} \
-#     2>&1 | tee ${log_path}/${jobname}_${host}_${current_time}.log
 
 deepspeed ${megatron_deepspeed_dir}/pretrain_mistral.py \
     ${megatron_options} \
