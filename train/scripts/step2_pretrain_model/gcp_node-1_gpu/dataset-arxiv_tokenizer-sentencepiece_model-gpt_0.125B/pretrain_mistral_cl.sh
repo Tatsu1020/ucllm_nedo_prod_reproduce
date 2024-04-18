@@ -349,6 +349,9 @@ sed "s/GBSIZE/${global_batch_size}/" ${template_json} \
     | sed "s/LOG_INTERVAL/${log_interval}/" \
     | sed "s/ZERO_STAGE/${zero_stage}/" \
     | sed "s/PRESCALE_GRAD/${prescale_grad}/" \
+    | sed "s/CONFIG_CL_MIN/${cl_min}/" \
+    | sed "s/CONFIG_CL_MAX/${seq_len}/" \
+    | sed "s/CONFIG_CL_DURATION/${cl_step}/" \
       > ${config_json}
 
 deepspeed_options=" \
