@@ -20,10 +20,6 @@
   },
 
   "wall_clock_breakdown" : false,
-  "wandb": {
-      "enabled": true,
-      "project": "geniac"
-    },
   "curriculum_learning": {
     "enabled": true,
     "curriculum_type": "seqlen",
