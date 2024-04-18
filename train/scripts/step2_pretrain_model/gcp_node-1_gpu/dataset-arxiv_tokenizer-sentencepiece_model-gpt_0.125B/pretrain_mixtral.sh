@@ -116,8 +116,8 @@ init_std=0.02
 # init_std=0.008
 
 # Deepspeed MoE configs
-num_experts=8 
-ep_parallel_size=8 # set num_gpus if num_experts > num_gputs else num_experts
+num_experts=4 
+ep_parallel_size=4 # set num_gpus if num_experts > num_gputs else num_experts
 topk=2
 moe_train_cap_factor=1.0
 moe_eval_cap_factor=1.0
