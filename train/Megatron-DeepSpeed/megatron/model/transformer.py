@@ -213,6 +213,129 @@ class SwitchMLP(MegatronModule):
 
         return output_total, output_bias_total
 
+class MixtralParallelMLP(torch.nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.ffn_dim = config.ffn_hidden_size
+        self.hidden_dim = config.hidden_size
+
+        self.w1 = tensor_parallel.ColumnParallelLinear(
+            config.hidden_size,
+            config.ffn_hidden_size,
+            config=config,
+            init_method=config.init_method,
+            bias=False,
+            gather_output=False,
+            skip_bias_add=True,
+            moe=False,
+        )
+
+        self.w3 = tensor_parallel.ColumnParallelLinear(
+            config.hidden_size,
+            config.ffn_hidden_size,
+            config=config,
+            init_method=config.init_method,
+            bias=False,
+            gather_output=False,
+            skip_bias_add=True,
+            moe=False,
+        )
+
+        self.w2 = tensor_parallel.RowParallelLinear(
+            config.ffn_hidden_size,
+            config.hidden_size,
+            config=config,
+            init_method=config.output_layer_init_method,
+            bias=False,
+            skip_bias_add=True,
+            input_is_parallel=True,
+            moe=False
+        )
+
+        self.act_fn = F.silu
+
+    def forward(self, hidden_states):
+        selects, h = hidden_states.shape
+        hidden_states = hidden_states.view(selects, 1, h)
+        # glueの式通り。w1がgate_proj, w2がup_proj, w3がdown_proj
+        # https://github.com/huggingface/transformers/blob/v4.37.2/src/transformers/models/mistral/modeling_mistral.py#L177
+        current_hidden_states = self.act_fn(self.w1(hidden_states)[0]) * self.w3(hidden_states)[0]
+        current_hidden_states = self.w2(current_hidden_states)[0].view(selects, h)
+        return current_hidden_states
+
+
+class MixtralSparseMoeBlock(MegatronModule):
+    """
+    This is a megatron implementation refer to HuggingFace Mixtral Model.
+    Which strictly equivalent to standard MoE with full capacity (no
+    dropped tokens). It's faster since it formulates MoE operations
+    in terms of block-sparse operations to accomodate imbalanced
+    assignments of tokens to experts, whereas standard MoE either
+    (1) drop tokens at the cost of reduced performance or (2) set
+    capacity factor to number of experts and thus waste computation
+    and memory on padding.
+    """
+
+    def __init__(self, config):
+        super().__init__()
+        args = get_args()
+        self.hidden_dim = args.moe_hidden_size
+        self.ffn_dim = config.hidden_size
+        self.num_experts = args.num_experts
+        self.topk = args.topk
+        self.use_router_logits = False
+
+        # gating
+        self.gate = torch.nn.Linear(self.hidden_dim, self.num_experts, bias=False)
+
+        self.experts = torch.nn.ModuleList(
+            [MixtralParallelMLP(config) for _ in range(self.num_experts)]
+        )
+
+    def forward(self, hidden_states: torch.Tensor):
+        s, b, h = hidden_states.shape
+        hidden_states = hidden_states.view(-1, h)
+
+        # route: (batch * sequence_length, n_experts)
+        router_logits = self.gate(hidden_states)
+        if self.moe_load_balancing_mode == "sinkhorn":
+            router_logits = sinkhorn(router_logits)
+        elif self.moe_load_balancing_mode == "faster-sinkhorn":
+            router_logits = faster_sinkhorn(router_logits)
+
+        routing_weights = F.softmax(router_logits, dim=1, dtype=torch.float)
+        routing_weights, selected_experts = torch.topk(routing_weights, self.topk, dim=-1)
+        routing_weights /= routing_weights.sum(dim=-1, keepdim=True)
+        routing_weights = routing_weights.to(hidden_states.dtype)
+
+        output_total = torch.zeros_like(hidden_states)
+
+        # One hot encode the selected experts to create an expert mask
+        # this will be used to easily index which expert is going to be solicited
+        expert_mask = torch.nn.functional.one_hot(selected_experts, num_classes=self.num_experts).permute(2, 1, 0)
+
+        # Loop over all available experts in the model and perform the computation on each expert
+        for expert_idx in range(self.num_experts):
+            expert_layer = self.experts[expert_idx]
+            selected_expert_id_for_each_token, selected_tokens = torch.where(expert_mask[expert_idx])
+
+            if selected_tokens.shape[0] == 0:
+                continue
+
+            # Index the correct hidden states and compute the expert hidden state for
+            # the current expert. We need to make sure to multiply the output hidden
+            # states by `routing_weights` on the corresponding tokens (top-1 and top-2)
+            current_hidden_states = expert_layer(hidden_states[selected_tokens]) * routing_weights[selected_tokens, selected_expert_id_for_each_token, None]
+            output_total[selected_tokens] = output_total[selected_tokens] + current_hidden_states.to(hidden_states.dtype)
+
+        output_total = output_total.view(s, b, h).contiguous()
+        
+        if use_router_logits:
+            return output_total, None, router_logits.view
+        else:
+            # bias is disabled
+            return output_total, None
+
 
 class CoreAttention(MegatronModule):
 
@@ -969,6 +1092,8 @@ class ParallelTransformerLayer(MegatronModule):
         self.num_experts = num_experts
         if args.num_experts_switch is not None:
             self.mlp = SwitchMLP(config) # Megatron-LM's MoE
+        elif args.moe_type == "hf_mixtral":
+            self.mlp = MixtralSparseMoeBlock(config)
         else:
             if self.num_experts <= 1: # dense, not MoE
                 self.mlp = ParallelMLP(config)
