@@ -206,10 +206,14 @@ class SwitchMLP(MegatronModule):
             batch_idx, nth_expert  = torch.where(topk_ind == expert_num)
             output, output_bias = expert(hidden_states[batch_idx])
             output_total[batch_idx] += topk_prob[batch_idx, nth_expert, None] * output
-            output_bias_total[batch_idx] += topk_prob[batch_idx, nth_expert, None] *output_bias
+            if output_bias is not None:
+                output_bias_total[batch_idx] += topk_prob[batch_idx, nth_expert, None] *output_bias
 
         output_total = output_total.view(s, b, h)
-        output_bias_total = output_bias_total.view(s, b, h)
+        if output_bias is not None:
+            output_bias_total = output_bias_total.view(s, b, h)
+        else:
+            output_bias_total = None
 
         return output_total, output_bias_total
 
@@ -519,7 +523,10 @@ class FlashSelfAttention(torch.nn.Module):
 
         batch_size, seqlen_q = q.shape[0], q.shape[1]
         seqlen_k = k.shape[1]
-
+        k_heads = k.shape[2]
+        q_heads = q.shape[2]
+        v_heads = v.shape[2]
+        d = k.shape[3]
         if get_accelerator().device_name() == 'cuda':
             # goes for cuda device
             q, k, v = [rearrange(x, 'b s ... -> (b s) ...') for x in [q, k, v]]
@@ -551,6 +558,9 @@ class FlashSelfAttention(torch.nn.Module):
                 "(b nblocks) -> b nblocks",
                 b=batch_size,
             )
+            k = torch.reshape(k, (num_blocks, self.paged_kv_block_size, k_heads, d))
+            #q = torch.reshape(q, (num_blocks, self.paged_kv_block_size, q_heads, d))
+            v = torch.reshape(v, (num_blocks, self.paged_kv_block_size, v_heads, d))
         else:
             block_table = None
 
@@ -558,9 +568,9 @@ class FlashSelfAttention(torch.nn.Module):
             output = self.flash_attn_func(
                 q, k, v, cu_seqlens_q, cu_seqlens_k, seqlen_q, seqlen_k,
                 dropout_p,
-                softmax_scale=self.softmax_scale, causal=is_causal, window_size=self.window_size #, block_table=block_table
+                softmax_scale=self.softmax_scale, causal=is_causal, window_size=self.window_size, block_table=block_table
             ) if get_accelerator().device_name() == 'cuda' else flash_attn_builder.flash_attn_func(
-                q, k, v, self.dropout_p, self.softmax_scale, is_causal, window_size=self.window_size #, block_table=block_table
+                q, k, v, self.dropout_p, self.softmax_scale, is_causal, window_size=self.window_size, block_table=block_table
             )
         else:
             output = self.flash_attn_func(
@@ -622,8 +632,7 @@ class ParallelAttention(MegatronModule):
 
     def __init__(self, config, layer_number,
                  attention_type=AttnType.self_attn,
-                 attn_mask_type=AttnMaskType.padding,
-                 block_table=None):
+                 attn_mask_type=AttnMaskType.padding):
         super(ParallelAttention, self).__init__()
         args = get_args()
         self.layer_number = max(1, layer_number)

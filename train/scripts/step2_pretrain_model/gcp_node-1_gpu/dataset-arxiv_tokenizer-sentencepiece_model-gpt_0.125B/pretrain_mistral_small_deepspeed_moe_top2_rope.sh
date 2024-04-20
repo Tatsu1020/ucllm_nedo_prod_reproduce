@@ -60,16 +60,31 @@ seq_len=2048
 ## We changed min_lr to a lower number (1.0e-6), which we found is able to
 ## provide better zero-shot eval results.
 
-## GPT-3 Small 125M
-model="gpt3_multinode_test"
+## Mistral Small MoE Switch 125M
+model="mistral_moe_deepspeed_top2_rope"
 model_size=0.125
 num_layers=12
 hidden_size=768
 num_attn_heads=12
+num_key_value_heads=4
+window_size=1024 # if -1, local attention won't be applied
+paged_kv_block_size=0 # if 0, paged atten won't be used
 global_batch_size=256
+topk=2
 lr=6.0e-4
 min_lr=1.0e-6
 init_std=0.02
+
+
+## GPT-3 Small 125M
+#model_size=0.125
+#num_layers=12
+#hidden_size=768
+#num_attn_heads=12
+#global_batch_size=256
+#lr=6.0e-4
+#min_lr=1.0e-6
+#init_std=0.02
 
 ## GPT-3 Medium 350M
 # model_size=0.35
@@ -193,7 +208,7 @@ pp_size=1
 no_pp="false"
 
 ## ZeRO-based data parallelism, stage=0 will disable ZeRO
-zero_stage=1
+zero_stage=0
 
 ## Total number of GPUs.
 num_gpus_pernode=$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)
@@ -203,11 +218,35 @@ num_gpus=$((${num_gpus_pernode} * ${num_node}))
 ## Data parallel size.
 dp_size=$(( ${num_gpus} / ${pp_size} / ${mp_size} ))
 
-## Micro batch size per GPU
+### deepspeed MoE configs
+EP_SIZE=4 
+
+# if [[ $EP_SIZE -gt $num_gpus ]]; then
+#     EP_PARALLEL_SIZE=$num_gpus
+# else
+#     EP_PARALLEL_SIZE=$EP_SIZE
+# fi
+
+EP_PARALLEL_SIZE=4
+
+# MoE loss coefficient
+MLC=0.01
+
+## Below configs adjust the MoE expert token capacity limit during training and
+## eval. To completely disable capacity limit, set MOE_DROP_TOKEN to false.
+## Larger capacity factor or disabling capacity limit could improve training
+## convergence, but will also reduce training throughput.
+MOE_TRAIN_CAP_FACTOR=1.0
+MOE_EVAL_CAP_FACTOR=1.0
+MOE_MIN_CAP=4
+MOE_DROP_TOKEN="true"
+# MOE_DROP_TOKEN="false"
+
+#Micro batch size per GPU
 ## Make sure that batch_size <= global_batch_size*pp_size*mp_size/num_gpus
 ## Reduce it manually if GPU OOM
 #batch_size=$(( ${global_batch_size} / ${dp_size} ))
-batch_size=16
+batch_size=8
 ###############################################################################
 ### Misc configs
 log_interval=10
@@ -248,7 +287,7 @@ if [ ! -f "${data_path}.bin" ] || [ ! -f "${data_path}.idx" ]; then
         --input ${megatron_deepspeed_dir}/dataset/arxiv.jsonl \
         --output-prefix ${megatron_deepspeed_dir}/dataset/arxiv \
         --dataset-impl mmap \
-        --workers $(grep -c ^processor /proc/cpuinfo) \
+        --workers 1 \
         --append-eod
 else
     echo "Both ${data_path}.bin and ${data_path}.idx already exist."
@@ -289,11 +328,19 @@ data_options=" \
 
 ## If CL is used, make sure to set "--split" the same as what you used during
 ## offline data analysis&indexing.
+## swiglu is true
 megatron_options=" \
     --override-opt_param-scheduler \
     --adam-beta1 0.9 \
     --adam-beta2 0.95 \
     --tensor-model-parallel-size ${mp_size} \
+    --moe-expert-parallel-size ${EP_PARALLEL_SIZE} \
+    --num-experts ${EP_SIZE} \
+    --moe-loss-coeff ${MLC} \
+    --moe-train-capacity-factor ${MOE_TRAIN_CAP_FACTOR} \
+    --moe-eval-capacity-factor ${MOE_EVAL_CAP_FACTOR} \
+    --moe-min-capacity ${MOE_MIN_CAP} \
+    --topk ${topk} \
     --init-method-std ${init_std} \
     --lr-decay-tokens ${lr_decay_tokens} \
     --lr-warmup-tokens ${lr_warmup_tokens} \
@@ -303,7 +350,13 @@ megatron_options=" \
     --num-layers ${num_layers} \
     --hidden-size ${hidden_size} \
     --num-attention-heads ${num_attn_heads} \
+    --num-key-value-heads ${num_key_value_heads} \
     --seq-length ${seq_len} \
+    --window-size ${window_size} \
+    --paged-kv-block-size ${paged_kv_block_size} \
+    --swiglu \
+    --use-rotary-position-embeddings \
+    --rotary-percent 0.25 \
     --max-position-embeddings ${seq_len} \
     --train-tokens ${train_tokens} \
     --train-samples ${train_samples} \
@@ -385,25 +438,14 @@ if [[ $iteration -gt 0 ]]; then
     ds_ssh "echo $iteration_2 > $iteration_file_2"
 fi
 
-# Creates a hostfile.
-script_dir=$(dirname "$0")
-hostfile="${script_dir}/hostfiles/hostfile_jobid-${SLURM_JOB_ID}"
-nodes=$(scontrol show hostnames $SLURM_JOB_NODELIST)
+ 
+# deepspeed ${megatron_deepspeed_dir}/pretrain_gpt.py \
+#     ${megatron_options} \
+#     ${data_options} \
+#     ${deepspeed_options} \
+#     2>&1 | tee ${log_path}/${jobname}_${host}_${current_time}.log
 
-for node in $nodes
-do
-  gpu_count=$(ssh ${node} "nvidia-smi --query-gpu=name --format=csv,noheader | wc -l")
-  echo "${node} slots=${gpu_count}"
-  ssh $node "source ~/.bashrc"
-  ssh $node 'source ~/miniconda3/etc/profile.d/conda.sh && conda activate .venv'
-done > "${hostfile}"
-
-echo "hostfile = ${hostfile}"
-cat ${hostfile}
-echo ""
-
-deepspeed --hostfile ${hostfile} \
-    ${megatron_deepspeed_dir}/pretrain_gpt.py \
+deepspeed ${megatron_deepspeed_dir}/pretrain_mistral.py \
     ${megatron_options} \
     ${data_options} \
     ${deepspeed_options} \
