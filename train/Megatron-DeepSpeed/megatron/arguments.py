@@ -287,6 +287,9 @@ def validate_args(args, defaults={}):
             else:
                 args.ffn_hidden_size = 4 * args.hidden_size
 
+        if args.moe_hidden_size is None:
+            args.moe_hidden_size = args.ffn_hidden_size
+        
         if args.kv_channels is None:
             assert args.hidden_size % args.num_attention_heads == 0
             args.kv_channels = args.hidden_size // args.num_attention_heads
@@ -596,6 +599,10 @@ def _add_network_size_args(parser):
                        help='Number of encoder transformer layers.')
     group.add_argument('--decoder-num-layers', type=int, default=None,
                        help='Number of decoder transformer layers.')
+    group.add_argument('--moe-type', type=str, default="ds_moe",
+                           help='type of moe implementation, available optioins are [switchmlp, hf_mixtral, ds_moe]')
+    group.add_argument('--moe-hidden-size', type=int, default=None,
+                           help='type of moe implementation, available optioins are [switchmlp, hf_mixtral, ds_moe]')
     group.add_argument('--num-experts', type=int, nargs='+', default=[1,],
                            help='number of experts list, MoE related.')
     group.add_argument('--mlp-type', type=str, default='standard',

@@ -172,6 +172,41 @@ class ParallelMLP(MegatronModule):
         output, output_bias = self.dense_4h_to_h(intermediate_parallel)
         return output, output_bias
 
+def sinkhorn(cost, tol=0.0001):
+    cost = torch.exp(cost)
+    d0 = torch.ones(cost.size(0), device=cost.device, dtype=cost.dtype)
+    d1 = torch.ones(cost.size(1), device=cost.device, dtype=cost.dtype)
+    
+    eps = 0.00000001
+    error = 1e9
+    d1_old = d1
+    while error > tol:
+        d0 = (1/d0.size(0))*1/(torch.sum(d1*cost,1) + eps)
+        d1 = (1/d1.size(0))*1/(torch.sum(d0.unsqueeze(1)*cost,0)+eps)
+        error = torch.mean(torch.abs(d1_old-d1))
+        d1_old = d1
+    return d1*cost*d0.unsqueeze(1)
+
+
+def faster_sinkhorn(cost, tol=0.0001):
+    # https://arxiv.org/pdf/2402.01771.pdf
+    # Appendix F
+    cost = 2 * torch.exp(cost)
+    d0 = torch.ones(cost.size(0), device=cost.device, dtype=cost.dtype)
+    d1 = torch.ones(cost.size(1), device=cost.device, dtype=cost.dtype)
+    d0 = d0 * (1/d0.size(0)) * torch.sum(cost, dim=1)
+    d1 = d1 * (1/d1.size(0))
+
+    eps = 0.00000001
+    error = 1e9
+    d1_old = d1
+    while error > tol:
+        d0 = (1/d0.size(0))*1/(torch.sum(d1*cost,1) + eps)
+        d1 = (1/d1.size(0))*1/(torch.sum(d0.unsqueeze(1)*cost,0)+eps)
+        error = torch.mean(torch.abs(d1_old-d1))
+        d1_old = d1
+    return d1*cost*d0.unsqueeze(1)
+
 class SwitchMLP(MegatronModule):
     """
     Routes input to one of N MLP "experts"
@@ -182,7 +217,7 @@ class SwitchMLP(MegatronModule):
         self.k = args.topk
         self.router = torch.nn.Linear(config.hidden_size, args.num_experts_switch)
         self.experts = torch.nn.ModuleList()
-        for i in range(args.num_experts_switch):
+        for _ in range(args.num_experts):
             self.experts.append(ParallelMLP(config))
 
 
@@ -270,9 +305,9 @@ class MixtralParallelMLP(torch.nn.Module):
 
 class MixtralSparseMoeBlock(MegatronModule):
     """
-    This is a megatron implementation refer to HuggingFace Mixtral Model.
-    Which strictly equivalent to standard MoE with full capacity (no
-    dropped tokens). It's faster since it formulates MoE operations
+    This is a megatron implementation refer to HuggingFace Mixtral Model which 
+    strictly equivalent to standard MoE with full capacity (no dropped tokens). 
+    It's faster since it formulates MoE operations
     in terms of block-sparse operations to accomodate imbalanced
     assignments of tokens to experts, whereas standard MoE either
     (1) drop tokens at the cost of reduced performance or (2) set
@@ -1098,15 +1133,16 @@ class ParallelTransformerLayer(MegatronModule):
                 self.post_inter_attention_layernorm = RMSNorm(config.hidden_size, config.layernorm_epsilon)
 
         # MLP
+        self.moe_type = args.moe_type
         self.num_experts = num_experts
-        if args.num_experts_switch is not None:
-            self.mlp = SwitchMLP(config) # Megatron-LM's MoE
-        elif args.moe_type == "hf_mixtral":
-            self.mlp = MixtralSparseMoeBlock(config)
+        if self.num_experts <= 1: # dense, not MoE
+            self.mlp = ParallelMLP(config)
         else:
-            if self.num_experts <= 1: # dense, not MoE
-                self.mlp = ParallelMLP(config)
-            else: # DeepSpeed's MoE
+            if self.moe_type == "switchmlp":
+                self.mlp = SwitchMLP(config) # Megatron-LM's MoE
+            elif self.moe_type == "hf_mixtral":
+                self.mlp = MixtralSparseMoeBlock(config)
+            elif self.moe_type == "ds_moe": # DeepSpeed's MoE
                 enable_expert_tensor_parallelism = args.enable_expert_tensor_parallelism
                 self.mlp = MoE(args.hidden_size,
                                ParallelMLP(config,
@@ -1123,6 +1159,8 @@ class ParallelTransformerLayer(MegatronModule):
                                use_tutel=args.use_tutel,
                                enable_expert_tensor_parallelism=enable_expert_tensor_parallelism,
                                top2_2nd_expert_sampling=args.moe_top2_2nd_expert_sampling)
+            else:
+                raise Exception(f"MoE type {self.moe_type} is not supported. MoE type needs to be one of ['switchmlp', 'hf_mixtral', 'ds_moe'].")
 
         # Set bias+dropout+add fusion grad_enable execution handler.
         TORCH_MAJOR = int(torch.__version__.split('.')[0])
@@ -1453,7 +1491,7 @@ class ParallelTransformerLayer(MegatronModule):
         moe_loss = torch.tensor(0.0, device=layernorm_output.device, dtype=layernorm_output.dtype)
         mlp_bias = torch.tensor(0.0, device=layernorm_output.device, dtype=layernorm_output.dtype)
 
-        if self.num_experts == 1:
+        if self.num_experts >= 1 and self.expert_type != "ds_moe":
             mlp_output, mlp_bias = self.mlp(layernorm_output)
         else:
             mlp_output, moe_loss, _ = self.mlp(layernorm_output)

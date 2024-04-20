@@ -59,16 +59,17 @@ echo ""
 
 ## Mixtral Small --- test version 125M
 seq_len=2048
-model="mixtral_small_ds_moe"
+model="mixtral_small_hf_moe"
 model_size=0.125
 num_layers=12
 hidden_size=768
 ffn_hidden_size=2048  # for swiglu, (4 * hidden_size * 2 / 3) / 64) * 64 as a default
+moe_hidden_size=1024
 num_attn_heads=12
 num_key_value_heads=4
 window_size=1024 # if -1, local attention won't be applied
 paged_kv_block_size=0 # if 0, paged atten won't be used
-moe_type="ds_moe"
+moe_type="hf_mixtral"
 num_experts=4 
 topk=2
 normalization="rmsnorm"
@@ -309,6 +310,7 @@ megatron_options=" \
     --max-position-embeddings ${max_position_embeddings} \
     --moe-expert-parallel-size ${ep_parallel_size} \
     --moe-type ${moe_type} \
+    --moe-hidden-size ${moe_hidden_size} \
     --num-experts ${num_experts} \
     --moe-loss-coeff ${moe_loss_coef} \
     --moe-train-capacity-factor ${moe_train_cap_factor} \

@@ -68,7 +68,8 @@ num_attn_heads=12
 num_key_value_heads=4
 window_size=1024 # if -1, local attention won't be applied
 paged_kv_block_size=0 # if 0, paged atten won't be used
-num_experts_switch=4
+moe_type="switchmlp"
+num_experts=4
 topk=2
 normalization="rmsnorm"
 norm_eps=1e-6
@@ -308,7 +309,8 @@ megatron_options=" \
     --no-query-key-layer-scaling \
     --rotary-percent 0.25 \
     --max-position-embeddings ${max_position_embeddings} \
-    --num-experts-switch ${num_experts_switch} \
+    --moe-type ${moe_type} \
+    --num-experts ${num_experts} \
     --moe-loss-coeff ${moe_loss_coef} \
     --moe-train-capacity-factor ${moe_train_cap_factor} \
     --moe-eval-capacity-factor ${moe_eval_cap_factor} \
