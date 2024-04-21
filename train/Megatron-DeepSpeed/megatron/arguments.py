@@ -906,6 +906,8 @@ def _add_training_args(parser):
                        help='The minimum capacity per MoE expert regardless of the capacity_factor.')
     group.add_argument('--moe-loss-coeff', type=float, default=0.1,
                        help='Scaling coefficient for adding MoE loss to model loss')
+    group.add_argument('--moe-aux-loss', action="store_true",
+                       help='Aux loss for moe router load balancing.')
     group.add_argument('--create-moe-param-group', action='store_true',
                        help='Create separate groups for MoE params.'
                        'This is necessary for techniques like ZeRO.')
