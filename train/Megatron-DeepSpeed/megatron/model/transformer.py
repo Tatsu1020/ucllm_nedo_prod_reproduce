@@ -267,7 +267,6 @@ class SwitchMLP(MegatronModule):
         self.experts = torch.nn.ModuleList()
         for _ in range(self.num_experts):
             self.experts.append(ParallelMLP(config))
-        self.moe_aux_loss = args.moe_aux_loss
 
     def forward(self, hidden_states):
         # hidden_states: [s, b, h]
@@ -298,10 +297,6 @@ class SwitchMLP(MegatronModule):
         else:
             output_bias_total = None
         
-        if self.moe_aux_loss:
-            moe_aux_loss = load_balancing_loss_func(route, self.num_experts, self.k) 
-            return output_total, moe_aux_loss, None
-
         return output_total, output_bias_total
 
 class MixtralParallelMLP(torch.nn.Module):
@@ -1545,7 +1540,7 @@ class ParallelTransformerLayer(MegatronModule):
         moe_loss = torch.tensor(0.0, device=layernorm_output.device, dtype=layernorm_output.dtype)
         mlp_bias = torch.tensor(0.0, device=layernorm_output.device, dtype=layernorm_output.dtype)
 
-        if self.num_experts == 1 or not self.moe_aux_loss:
+        if self.num_experts == 1 or self.moe_type == "switchmlp" or not self.moe_aux_loss:
             mlp_output, mlp_bias = self.mlp(layernorm_output)
         else:
             mlp_output, moe_loss, _ = self.mlp(layernorm_output)
