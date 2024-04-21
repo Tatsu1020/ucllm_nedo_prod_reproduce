@@ -267,6 +267,7 @@ class SwitchMLP(MegatronModule):
         self.experts = torch.nn.ModuleList()
         for _ in range(self.num_experts):
             self.experts.append(ParallelMLP(config))
+        self.moe_aux_loss = args.moe_aux_loss
 
     def forward(self, hidden_states):
         # hidden_states: [s, b, h]
