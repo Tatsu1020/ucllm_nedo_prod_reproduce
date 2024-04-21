@@ -215,9 +215,10 @@ class SwitchMLP(MegatronModule):
         super(SwitchMLP, self).__init__()
         args = get_args()
         self.k = args.topk
-        self.router = torch.nn.Linear(config.hidden_size, args.num_experts)
+        self.num_experts = args.num_experts[0]
+        self.router = torch.nn.Linear(config.hidden_size, self.num_experts)
         self.experts = torch.nn.ModuleList()
-        for _ in range(args.num_experts):
+        for _ in range(self.num_experts):
             self.experts.append(ParallelMLP(config))
 
 
