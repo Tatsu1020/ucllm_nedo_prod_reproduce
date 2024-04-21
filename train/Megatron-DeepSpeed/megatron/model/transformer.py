@@ -419,7 +419,6 @@ class MixtralSparseMoeBlock(MegatronModule):
         output_total = output_total.view(s, b, h).contiguous()
         
         if self.moe_aux_loss:
-            print("MoE loss is returned")
             moe_aux_loss = self.load_balancing_loss_func(router_logits, self.num_experts, self.topk) 
             return output_total, moe_aux_loss, None
         else:
