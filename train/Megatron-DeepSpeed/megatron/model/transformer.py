@@ -255,12 +255,12 @@ class SwitchMLP(MegatronModule):
 class MixtralParallelMLP(torch.nn.Module):
     def __init__(self, config):
         super().__init__()
-        self.ffn_dim = config.ffn_hidden_size
         self.hidden_dim = config.hidden_size
+        self.moe_hidden_dim = config.moe_hidden_size
 
         self.w1 = tensor_parallel.ColumnParallelLinear(
             config.hidden_size,
-            config.ffn_hidden_size,
+            config.moe_hidden_size,
             config=config,
             init_method=config.init_method,
             bias=False,
@@ -271,7 +271,7 @@ class MixtralParallelMLP(torch.nn.Module):
 
         self.w3 = tensor_parallel.ColumnParallelLinear(
             config.hidden_size,
-            config.ffn_hidden_size,
+            config.moe_hidden_size,
             config=config,
             init_method=config.init_method,
             bias=False,
@@ -281,7 +281,7 @@ class MixtralParallelMLP(torch.nn.Module):
         )
 
         self.w2 = tensor_parallel.RowParallelLinear(
-            config.ffn_hidden_size,
+            config.moe_hidden_size,
             config.hidden_size,
             config=config,
             init_method=config.output_layer_init_method,
@@ -318,9 +318,8 @@ class MixtralSparseMoeBlock(MegatronModule):
     def __init__(self, config):
         super().__init__()
         args = get_args()
-        self.hidden_dim = args.moe_hidden_size
-        self.ffn_dim = config.hidden_size
-        self.num_experts = args.num_experts
+        self.hidden_dim = args.hidden_size
+        self.num_experts = args.num_experts[0]
         self.topk = args.topk
         self.use_router_logits = False
 
@@ -330,6 +329,8 @@ class MixtralSparseMoeBlock(MegatronModule):
         self.experts = torch.nn.ModuleList(
             [MixtralParallelMLP(config) for _ in range(self.num_experts)]
         )
+
+        self.moe_load_balancing_mode = "sinkhorn"
 
     def forward(self, hidden_states: torch.Tensor):
         s, b, h = hidden_states.shape
@@ -369,7 +370,7 @@ class MixtralSparseMoeBlock(MegatronModule):
 
         output_total = output_total.view(s, b, h).contiguous()
         
-        if use_router_logits:
+        if self.use_router_logits:
             return output_total, None, router_logits.view
         else:
             # bias is disabled
@@ -1134,7 +1135,7 @@ class ParallelTransformerLayer(MegatronModule):
 
         # MLP
         self.moe_type = args.moe_type
-        self.num_experts = num_experts
+        self.num_experts = args.num_experts[0]
         if self.num_experts <= 1: # dense, not MoE
             self.mlp = ParallelMLP(config)
         else:
@@ -1157,8 +1158,7 @@ class ParallelTransformerLayer(MegatronModule):
                                min_capacity=args.moe_min_capacity,
                                drop_tokens=args.moe_token_dropping,
                                use_tutel=args.use_tutel,
-                               enable_expert_tensor_parallelism=enable_expert_tensor_parallelism,
-                               top2_2nd_expert_sampling=args.moe_top2_2nd_expert_sampling)
+                               enable_expert_tensor_parallelism=enable_expert_tensor_parallelism)
             else:
                 raise Exception(f"MoE type {self.moe_type} is not supported. MoE type needs to be one of ['switchmlp', 'hf_mixtral', 'ds_moe'].")
 
@@ -1870,7 +1870,9 @@ class ParallelTransformer(MegatronModule):
                 layer_num = i + 1 + offset
                 if layer_num % args.expert_interval == 0:
                     n_e = num_experts[(layer_num-1) // args.expert_interval]
+                    print(f"Experts {n_e}")
                 else:
+                    print("experts are set to 1")
                     n_e = 1
                 self.layers.append(build_layer(layer_num, n_e))
             self.layers = torch.nn.ModuleList(self.layers)

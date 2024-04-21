@@ -64,7 +64,7 @@ model_size=0.125
 num_layers=12
 hidden_size=768
 ffn_hidden_size=2048  # for swiglu, (4 * hidden_size * 2 / 3) / 64) * 64 as a default
-moe_hidden_size=1024
+moe_hidden_size=2048
 num_attn_heads=12
 num_key_value_heads=4
 window_size=1024 # if -1, local attention won't be applied
@@ -397,7 +397,7 @@ if [[ $iteration -gt 0 ]]; then
     ds_ssh "echo $iteration_2 > $iteration_file_2"
 fi
 
-deepspeed ${megatron_deepspeed_dir}/pretrain_mistral.py \
+deepspeed --master_port 29600 ${megatron_deepspeed_dir}/pretrain_mistral.py \
     ${megatron_options} \
     ${data_options} \
     ${deepspeed_options} \
