@@ -4,7 +4,7 @@
 #SBATCH --partition=g2
 #SBATCH --time=06:00:00
 #SBATCH --nodes=1
-#SBATCH --job-name=pretrain_mixtral
+#SBATCH --job-name=test
 #SBATCH --output=./jobs/outs/pretrain_mixtral_switchmlp_final.out
 #SBATCH --gpus-per-node=4
 
