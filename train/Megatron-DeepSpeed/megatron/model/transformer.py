@@ -329,8 +329,9 @@ class MixtralSparseMoeBlock(MegatronModule):
         self.experts = torch.nn.ModuleList(
             [MixtralParallelMLP(config) for _ in range(self.num_experts)]
         )
-
-        self.moe_load_balancing_mode = "sinkhorn"
+        
+        # default is None
+        self.moe_load_balancing_mode = args.moe_load_balancing_mode
 
     def forward(self, hidden_states: torch.Tensor):
         s, b, h = hidden_states.shape
@@ -1870,9 +1871,7 @@ class ParallelTransformer(MegatronModule):
                 layer_num = i + 1 + offset
                 if layer_num % args.expert_interval == 0:
                     n_e = num_experts[(layer_num-1) // args.expert_interval]
-                    print(f"Experts {n_e}")
                 else:
-                    print("experts are set to 1")
                     n_e = 1
                 self.layers.append(build_layer(layer_num, n_e))
             self.layers = torch.nn.ModuleList(self.layers)

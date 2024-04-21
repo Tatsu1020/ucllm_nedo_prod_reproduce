@@ -601,6 +601,8 @@ def _add_network_size_args(parser):
                        help='Number of decoder transformer layers.')
     group.add_argument('--moe-type', type=str, default="ds_moe",
                            help='type of moe implementation, available optioins are [switchmlp, hf_mixtral, ds_moe]')
+    group.add_argument('--moe-load-balancing-mode', type=str, default=None,
+                           help="Balancing the probability of each expert's vote suppored in mixtral moe.")
     group.add_argument('--moe-hidden-size', type=int, default=None,
                            help='type of moe implementation, available optioins are [switchmlp, hf_mixtral, ds_moe]')
     group.add_argument('--num-experts', type=int, nargs='+', default=[1,],
@@ -609,8 +611,6 @@ def _add_network_size_args(parser):
                            help='Only applicable when num-experts > 1, accepts [standard, residual]')
     group.add_argument('--topk', type=int, default=1,
                            help='Sets the k in TopK gating for MoE layers')
-    group.add_argument('--moe-top2-2nd-expert-sampling', action='store_true',
-                           help=''), 
     group.add_argument('--expert-interval', type=int, default=1,
                            help='Use experts in every "expert-interval" layers')
     group.add_argument('--hidden-size', type=int, default=None,
