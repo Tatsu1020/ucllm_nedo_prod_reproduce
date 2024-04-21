@@ -59,7 +59,7 @@ echo ""
 
 ## Mixtral Small --- test version 125M
 seq_len=2048
-model="mixtral_small_hf_moe"
+model="mixtral_small_hf_moe_aux_loss"
 model_size=0.125
 num_layers=12
 hidden_size=768
