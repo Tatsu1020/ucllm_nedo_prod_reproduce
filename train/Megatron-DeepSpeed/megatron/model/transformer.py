@@ -172,6 +172,53 @@ class ParallelMLP(MegatronModule):
         output, output_bias = self.dense_4h_to_h(intermediate_parallel)
         return output, output_bias
 
+def load_balancing_loss_func(gate_logits: torch.Tensor, num_experts: torch.Tensor = None, top_k=2) -> float:
+    """
+    Computes auxiliary load balancing loss as in Switch Transformer - implemented in Pytorch.
+
+    See Switch Transformer (https://arxiv.org/abs/2101.03961) for more details. This function implements the loss
+    function presented in equations (4) - (6) of the paper. It aims at penalizing cases where the routing between
+    experts is too unbalanced.
+
+    Args:
+        gate_logits (Union[`torch.Tensor`, Tuple[torch.Tensor]):
+            Logits from the `gate`, should be a tuple of tensors. Shape: [batch_size, seqeunce_length, num_experts].
+        num_experts (`int`, *optional*):
+            Number of experts
+
+    Returns:
+        The auxiliary loss.
+    """
+    if gate_logits is None:
+        return 0
+
+    if isinstance(gate_logits, tuple):
+        # cat along the layers?
+        gate_logits = torch.cat(gate_logits, dim=0)
+
+    routing_weights, selected_experts = torch.topk(gate_logits, top_k, dim=-1)
+    routing_weights = routing_weights.softmax(dim=-1)
+
+    # cast the expert indices to int64, otherwise one-hot encoding will fail
+    if selected_experts.dtype != torch.int64:
+        selected_experts = selected_experts.to(torch.int64)
+
+    if len(selected_experts.shape) == 2:
+        selected_experts = selected_experts.unsqueeze(2)
+
+    expert_mask = torch.nn.functional.one_hot(selected_experts, num_experts)
+
+    # For a given token, determine if it was routed to a given expert.
+    expert_mask = torch.max(expert_mask, axis=-2).values
+
+    # cast to float32 otherwise mean will fail
+    expert_mask = expert_mask.to(torch.float32)
+    tokens_per_group_and_expert = torch.mean(expert_mask, axis=-2)
+
+    router_prob_per_group_and_expert = torch.mean(routing_weights, axis=-1)
+    return torch.mean(tokens_per_group_and_expert * router_prob_per_group_and_expert.unsqueeze(-1)) * (num_experts**2)
+
+
 def sinkhorn(cost, tol=0.0001):
     cost = torch.exp(cost)
     d0 = torch.ones(cost.size(0), device=cost.device, dtype=cost.dtype)
@@ -221,7 +268,6 @@ class SwitchMLP(MegatronModule):
         for _ in range(self.num_experts):
             self.experts.append(ParallelMLP(config))
 
-
     def forward(self, hidden_states):
         # hidden_states: [s, b, h]
         s = hidden_states.size(0)
@@ -250,6 +296,10 @@ class SwitchMLP(MegatronModule):
             output_bias_total = output_bias_total.view(s, b, h)
         else:
             output_bias_total = None
+        
+        if self.moe_aux_loss:
+            moe_aux_loss = load_balancing_loss_func(route, self.num_experts, self.k) 
+            return output_total, moe_aux_loss, None
 
         return output_total, output_bias_total
 
@@ -303,7 +353,6 @@ class MixtralParallelMLP(torch.nn.Module):
         current_hidden_states = self.w2(current_hidden_states)[0].view(selects, h)
         return current_hidden_states
 
-
 class MixtralSparseMoeBlock(MegatronModule):
     """
     This is a megatron implementation refer to HuggingFace Mixtral Model which 
@@ -333,52 +382,6 @@ class MixtralSparseMoeBlock(MegatronModule):
         # default is None
         self.moe_load_balancing_mode = args.moe_load_balancing_mode
         self.moe_aux_loss = args.moe_aux_loss
-
-    def load_balancing_loss_func(self, gate_logits: torch.Tensor, num_experts: torch.Tensor = None, top_k=2) -> float:
-        """
-        Computes auxiliary load balancing loss as in Switch Transformer - implemented in Pytorch.
-
-        See Switch Transformer (https://arxiv.org/abs/2101.03961) for more details. This function implements the loss
-        function presented in equations (4) - (6) of the paper. It aims at penalizing cases where the routing between
-        experts is too unbalanced.
-
-        Args:
-            gate_logits (Union[`torch.Tensor`, Tuple[torch.Tensor]):
-                Logits from the `gate`, should be a tuple of tensors. Shape: [batch_size, seqeunce_length, num_experts].
-            num_experts (`int`, *optional*):
-                Number of experts
-
-        Returns:
-            The auxiliary loss.
-        """
-        if gate_logits is None:
-            return 0
-
-        if isinstance(gate_logits, tuple):
-            # cat along the layers?
-            gate_logits = torch.cat(gate_logits, dim=0)
-
-        routing_weights, selected_experts = torch.topk(gate_logits, top_k, dim=-1)
-        routing_weights = routing_weights.softmax(dim=-1)
-
-        # cast the expert indices to int64, otherwise one-hot encoding will fail
-        if selected_experts.dtype != torch.int64:
-            selected_experts = selected_experts.to(torch.int64)
-
-        if len(selected_experts.shape) == 2:
-            selected_experts = selected_experts.unsqueeze(2)
-
-        expert_mask = torch.nn.functional.one_hot(selected_experts, num_experts)
-
-        # For a given token, determine if it was routed to a given expert.
-        expert_mask = torch.max(expert_mask, axis=-2).values
-
-        # cast to float32 otherwise mean will fail
-        expert_mask = expert_mask.to(torch.float32)
-        tokens_per_group_and_expert = torch.mean(expert_mask, axis=-2)
-
-        router_prob_per_group_and_expert = torch.mean(routing_weights, axis=-1)
-        return torch.mean(tokens_per_group_and_expert * router_prob_per_group_and_expert.unsqueeze(-1)) * (num_experts**2)
 
     def forward(self, hidden_states: torch.Tensor):
         s, b, h = hidden_states.shape
@@ -419,7 +422,7 @@ class MixtralSparseMoeBlock(MegatronModule):
         output_total = output_total.view(s, b, h).contiguous()
         
         if self.moe_aux_loss:
-            moe_aux_loss = self.load_balancing_loss_func(router_logits, self.num_experts, self.topk) 
+            moe_aux_loss = load_balancing_loss_func(router_logits, self.num_experts, self.topk) 
             return output_total, moe_aux_loss, None
         else:
             # bias is disabled
@@ -1541,7 +1544,7 @@ class ParallelTransformerLayer(MegatronModule):
         moe_loss = torch.tensor(0.0, device=layernorm_output.device, dtype=layernorm_output.dtype)
         mlp_bias = torch.tensor(0.0, device=layernorm_output.device, dtype=layernorm_output.dtype)
 
-        if self.num_experts == 1 or self.moe_type == "switchmlp" or not self.moe_aux_loss:
+        if self.num_experts == 1 or not self.moe_aux_loss:
             mlp_output, mlp_bias = self.mlp(layernorm_output)
         else:
             mlp_output, moe_loss, _ = self.mlp(layernorm_output)
